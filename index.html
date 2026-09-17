@@ -3,225 +3,250 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" content="#7030A0">
+<meta name="theme-color" content="#f4f3f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e0b14" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>MIX3 v14</title>
 <style>
   :root {
+    /* JASNY MOTYW (domyślny) */
+    --bg: #f4f3f7;
+    --bg-elev: #ffffff;
+    --bg-elev2: #f7f5fb;
+    --bg-elev3: #ece8f2;
+    --line: #e2ddec;
+    --line2: #d0cbde;
+    --text: #1a1626;
+    --dim: #6b6280;
+    --mute: #9b95a8;
+    --purple: #7030A0;
+    --purple-light: #a869d1;
+    --red: #C00000;
+    --green: #00B050;
+    --amber: #d4a017;
+    --hit-red: #dc2626;
+    --step-amber: #b45309;
+    --mono: ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace;
+    --row-hit: rgba(0, 176, 80, 0.06);
+    --row-step: rgba(255, 191, 0, 0.06);
+    --shadow: 0 8px 24px rgba(60, 40, 100, 0.15);
+  }
+  html[data-theme="dark"] {
     --bg: #0e0b14;
     --bg-elev: #171122;
     --bg-elev2: #201730;
+    --bg-elev3: #2a1f3d;
     --line: #2a1f3d;
+    --line2: #382a4d;
     --text: #ece7f4;
-    --text-dim: #9b8fb3;
-    --text-mute: #6b6280;
-    --start-gry: #7030A0;
-    --game: #C9A6D9;
-    --trigger: #C00000;
-    --win: #00B050;
-    --off-close: #C6EFCE;
-    --off-hit: #FFF9E0;
-    --off-step: #2a2338;
-    --mono: ui-monospace, 'JetBrains Mono', 'Menlo', 'Cascadia Code', 'SF Mono', monospace;
+    --dim: #9b8fb3;
+    --mute: #6b6280;
+    --purple-light: #C9A6D9;
+    --hit-red: #ef4444;
+    --step-amber: #fbbf24;
+    --row-hit: rgba(0, 176, 80, 0.05);
+    --row-step: rgba(255, 230, 153, 0.04);
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 15px; line-height: 1.45; overscroll-behavior-y: contain;
+    font-size: 14px; line-height: 1.35; overscroll-behavior: none;
+    height: 100vh; height: 100dvh; overflow: hidden; }
+  button, input { font-family: inherit; font-size: inherit; color: inherit; background: none; border: 0; }
+  input { outline: none; }
+
+  .app { display: flex; flex-direction: column; height: 100vh; height: 100dvh;
     padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
-  h1, h2, h3 { margin: 0; font-weight: 600; }
-  button { font-family: inherit; font-size: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-  input, select { font-family: inherit; font-size: inherit; color: inherit;
-    background: var(--bg-elev2); border: 1px solid var(--line); border-radius: 8px;
-    padding: 8px 10px; }
-  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
-  /* === LAYOUT === */
-  #root { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
-  .topbar { padding: 12px 14px 8px; background: linear-gradient(180deg, #1a0f2a 0%, var(--bg) 100%);
-    border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
-  .topbar .row1 { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-  .topbar .brand { font-weight: 700; letter-spacing: 0.5px; }
-  .topbar .brand .badge { background: var(--start-gry); color: #fff; padding: 2px 8px;
-    border-radius: 4px; font-size: 12px; margin-left: 6px; }
-  .topbar .kpi { font-size: 12px; color: var(--text-dim); }
-  .topbar .kpi strong { color: var(--text); font-family: var(--mono); font-size: 15px; }
-  .topbar .row2 { display: flex; gap: 14px; margin-top: 4px; font-size: 12px; color: var(--text-dim); }
-  .topbar .row2 .pill { display: inline-flex; gap: 4px; align-items: baseline; }
-  .topbar .row2 .pill strong { font-family: var(--mono); color: var(--text); }
-  .pnl-pos { color: #4ade80; }
-  .pnl-neg { color: #f87171; }
+  header { display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px 8px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+  header .title { font-size: 13px; letter-spacing: 0.5px; color: var(--dim); font-weight: 500; }
+  header .title b { color: var(--purple-light); font-weight: 700; margin: 0 2px; }
+  header .menu { padding: 6px 10px; background: var(--bg-elev2); border: 1px solid var(--line);
+    border-radius: 8px; font-size: 18px; color: var(--dim); }
 
-  main { flex: 1; padding: 12px 14px 96px; }
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    padding: 8px 14px 4px; flex-shrink: 0; }
+  .tabs button { padding: 10px 8px; background: var(--bg-elev); border: 1px solid var(--line);
+    border-left: 3px solid transparent; border-radius: 8px; color: var(--dim);
+    font-weight: 700; font-size: 16px; display: flex; align-items: center;
+    justify-content: center; gap: 8px; font-family: var(--mono); }
+  .tabs button.active { background: var(--bg-elev2); color: var(--text); border-color: var(--purple);
+    border-left-color: var(--purple); }
+  .tabs button.active[data-tab="T2"] { border-color: var(--amber); border-left-color: var(--amber); }
+  .tabs .badge { background: var(--bg-elev3); color: var(--dim); padding: 2px 8px;
+    border-radius: 6px; font-size: 11px; font-weight: 600; }
+  .tabs button.active .badge { background: var(--purple); color: #fff; }
+  .tabs button.active[data-tab="T2"] .badge { background: var(--amber); color: #1a0f00; }
 
-  /* === NAV === */
-  nav.tabs { position: fixed; bottom: 0; left: 0; right: 0; display: grid;
-    grid-template-columns: repeat(4, 1fr); background: var(--bg-elev);
-    border-top: 1px solid var(--line); z-index: 20;
-    padding-bottom: env(safe-area-inset-bottom); }
-  nav.tabs button { padding: 12px 0; color: var(--text-mute); font-size: 12px;
-    font-weight: 500; display: flex; flex-direction: column; align-items: center; gap: 3px;
-    border-top: 2px solid transparent; transition: color 120ms; }
-  nav.tabs button.active { color: var(--game); border-top-color: var(--start-gry); }
-  nav.tabs .icon { font-size: 20px; line-height: 1; }
+  .load-more { width: 100%; padding: 10px; background: var(--bg-elev2);
+    border: 1px dashed var(--line2); border-radius: 6px; color: var(--dim);
+    font-size: 12px; margin-bottom: 6px; cursor: pointer; }
+  .load-more:active { background: var(--bg-elev3); }
 
-  /* === CARDS === */
-  .card { background: var(--bg-elev); border: 1px solid var(--line); border-radius: 12px;
-    padding: 12px 14px; margin-bottom: 10px; }
-  .card h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
-    color: var(--text-dim); margin-bottom: 8px; font-weight: 600; }
-  .card .big { font-family: var(--mono); font-size: 24px; font-weight: 700; }
+  .chips { display: flex; gap: 6px; padding: 4px 14px 8px; overflow-x: auto;
+    scrollbar-width: none; flex-shrink: 0; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: 0 0 auto; padding: 6px 10px 8px; background: var(--bg-elev); border: 1px solid var(--line);
+    border-left: 3px solid var(--purple); border-radius: 8px; min-width: 82px;
+    display: flex; flex-direction: column; align-items: center; gap: 1px; transition: background 120ms; }
+  .chip.t2 { border-left-color: var(--amber); }
+  .chip .n { font-family: var(--mono); font-weight: 700; font-size: 15px; }
+  .chip .o { font-size: 10px; color: var(--dim); }
+  .chip.active { background: var(--amber); border-color: var(--amber); }
+  .chip.active .n, .chip.active .o { color: #1a0f00; }
+  .chip.active .o { color: rgba(26,15,0,0.75); }
 
-  /* === OPEN CYCLE === */
-  .open-cycle { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-  .open-cycle .stat { text-align: center; }
-  .open-cycle .stat .num { font-family: var(--mono); font-size: 22px; font-weight: 700; }
-  .open-cycle .stat .lbl { font-size: 11px; color: var(--text-dim); text-transform: uppercase;
-    letter-spacing: 0.5px; margin-top: 2px; }
-  .last-event { margin-top: 10px; padding: 8px 12px; border-radius: 8px;
-    font-family: var(--mono); font-size: 13px; text-align: center; }
-  .last-event.HIT { background: rgba(0, 176, 80, 0.18); color: #6ee7a7; }
-  .last-event.STEP { background: rgba(255, 230, 153, 0.14); color: #fbbf24; }
-  .last-event.SKIP { background: rgba(150, 150, 150, 0.1); color: var(--text-mute); }
+  .tiles { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 6px;
+    padding: 0 14px 8px; flex-shrink: 0; }
+  .tile { padding: 8px 10px; background: var(--bg-elev); border: 1px solid var(--line);
+    border-left: 3px solid var(--line2); border-radius: 8px; min-height: 54px; }
+  .tile .lbl { font-size: 10px; color: var(--dim); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 2px; }
+  .tile .val { font-family: var(--mono); font-size: 14px; font-weight: 600; line-height: 1.2; }
+  .tile.base { border-left-color: var(--purple); }
+  .tile.trig { border-left-color: var(--amber); }
+  .tile.stats { border-left-color: var(--green); }
+  .tile.trig.active { border-left-color: var(--red); background: color-mix(in srgb, var(--red) 10%, var(--bg-elev)); }
 
-  /* === TRIGGER CARDS === */
-  .trigger-list { display: flex; flex-direction: column; gap: 8px; }
-  .trig { padding: 12px; border-radius: 10px; border-left: 4px solid var(--start-gry);
-    background: var(--bg-elev2); position: relative; overflow: hidden; }
-  .trig.game { border-left-color: var(--start-gry); background: linear-gradient(90deg, rgba(112,48,160,0.25), var(--bg-elev2) 60%); }
-  .trig.prep { border-left-color: #d4a017; background: linear-gradient(90deg, rgba(212,160,23,0.15), var(--bg-elev2) 60%); }
-  .trig .hdr { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 4px; }
-  .trig .tag { font-family: var(--mono); font-size: 13px; font-weight: 700; }
-  .trig .live { font-size: 11px; color: var(--game); }
-  .trig .phase { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
-  .trig .progress { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
-  .trig .progress .bar { height: 100%; background: var(--game); transition: width 200ms; }
-  .trig .stake { font-family: var(--mono); font-size: 13px; margin-top: 6px; color: var(--text); }
-  .trig .stake .amt { color: #fde047; font-weight: 700; }
+  .table-wrap { flex: 1; overflow-y: auto; overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; background: var(--bg-elev); border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line); }
+  table { width: 100%; border-collapse: collapse; font-family: var(--mono);
+    font-size: 12px; table-layout: fixed; }
+  thead { position: sticky; top: 0; z-index: 2; background: var(--bg-elev2); }
+  thead th { padding: 8px 4px; text-align: left; color: var(--dim);
+    font-weight: 600; font-size: 11px; border-bottom: 1px solid var(--line);
+    text-transform: uppercase; letter-spacing: 0.5px; }
+  th:nth-child(1), td:nth-child(1) { width: 50px; padding-left: 8px; text-align: center; color: var(--mute); }
+  th:nth-child(2), td:nth-child(2) { width: 44px; text-align: center; font-weight: 600; }
+  th:nth-child(3), td:nth-child(3) { width: 72px; padding-left: 4px; }
+  th:nth-child(4), td:nth-child(4) { width: 30px; text-align: center; }
+  th:nth-child(5), td:nth-child(5) { padding: 6px; word-break: break-word; white-space: pre-line; }
 
-  .empty-state { padding: 24px 14px; text-align: center; color: var(--text-mute); font-size: 13px; }
+  tbody tr { border-bottom: 1px solid var(--line); }
+  tbody td { padding: 6px 4px; vertical-align: middle; }
+  tr.HIT { background: var(--row-hit); }
+  tr.STEP { background: var(--row-step); }
+  tr.HIT td:nth-child(2) { color: var(--hit-red); font-weight: 700; }
+  tr.STEP td:nth-child(2) { color: var(--step-amber); }
+  tr.SKIP td:nth-child(2) { color: var(--text); }
+  tr.win td:nth-child(3), tr.win td:nth-child(4) { color: var(--green); font-weight: 700; }
+  tr.step-role td:nth-child(3) { color: var(--step-amber); }
+  tr.krok td:nth-child(3) { color: var(--dim); }
 
-  /* === RECENT === */
-  .recent { display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 12px; }
-  .recent .r { display: flex; justify-content: space-between; padding: 4px 8px; border-radius: 4px; }
-  .recent .r.win { color: #6ee7a7; }
-  .recent .r.loss { color: #fca5a5; }
+  td.cell-label { line-height: 1.25; font-size: 11px; border-radius: 3px; }
+  td.cell-label.start_gry   { background: #7030A0; color: #fff; font-weight: 700; }
+  td.cell-label.game_hit    { background: #C9A6D9; color: #3B0F5E; }
+  td.cell-label.game_step   { background: #C9A6D9; color: #3B0F5E; }
+  td.cell-label.trigger     { background: #C00000; color: #fff; font-weight: 700; }
+  td.cell-label.win_result  { background: #00B050; color: #fff; font-weight: 700; }
+  td.cell-label.loss_result { background: #C00000; color: #fff; font-weight: 700; }
+  td.cell-label.offset_close{ background: #C6EFCE; color: #006100; }
+  td.cell-label.offset_hit  { background: #FFF9E0; color: #8B6B00; }
+  td.cell-label.offset_step { background: #F2F2F2; color: #7F7F7F; }
 
-  /* === NUMPAD === */
-  .code-display { font-family: var(--mono); font-size: 40px; font-weight: 700;
-    text-align: center; padding: 20px 10px; background: var(--bg-elev); border-radius: 12px;
-    letter-spacing: 8px; margin-bottom: 10px; min-height: 84px;
-    display: flex; align-items: center; justify-content: center; }
-  .code-display .placeholder { color: var(--text-mute); }
-  .role-feedback { text-align: center; font-family: var(--mono); font-size: 13px;
-    padding: 8px; border-radius: 6px; margin-bottom: 10px; min-height: 34px; }
-  .role-feedback.HIT { background: rgba(0,176,80,0.2); color: #6ee7a7; }
-  .role-feedback.STEP { background: rgba(255,230,153,0.15); color: #fbbf24; }
-  .role-feedback.SKIP { background: rgba(150,150,150,0.1); color: var(--text-mute); }
-  .role-feedback.WIN { background: var(--win); color: #fff; font-weight: 700; }
-  .role-feedback.LOSS { background: var(--trigger); color: #fff; font-weight: 700; }
-  .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .numpad button { aspect-ratio: 1.4; min-height: 64px; background: var(--bg-elev);
-    border: 1px solid var(--line); border-radius: 12px; font-family: var(--mono);
-    font-size: 26px; font-weight: 600; transition: transform 60ms, background 120ms; }
-  .numpad button:active { background: var(--bg-elev2); transform: scale(0.95); }
-  .numpad .act { background: var(--start-gry); border-color: var(--start-gry); font-size: 15px; color: #fff; }
-  .numpad .act.undo { background: var(--bg-elev2); color: var(--text-dim); font-size: 14px; }
-  .history-tape { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; font-family: var(--mono); font-size: 12px; }
-  .history-tape .c { padding: 3px 6px; border-radius: 4px; }
-  .history-tape .c.HIT { background: rgba(0,176,80,0.25); color: #6ee7a7; }
-  .history-tape .c.STEP { background: rgba(255,230,153,0.2); color: #fbbf24; }
-  .history-tape .c.SKIP { background: rgba(150,150,150,0.12); color: var(--text-mute); }
+  .empty { text-align: center; color: var(--mute); padding: 30px 14px; font-size: 13px; }
 
-  /* === HISTORIA === */
-  .filter-bar { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
-  .filter-bar button { padding: 6px 12px; border-radius: 6px; font-size: 13px;
-    background: var(--bg-elev); border: 1px solid var(--line); color: var(--text-dim); }
-  .filter-bar button.active { background: var(--start-gry); border-color: var(--start-gry); color: #fff; }
-  .cycle-list { display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 13px; }
-  .cycle-row { padding: 8px 12px; border-radius: 6px; background: var(--bg-elev);
-    display: grid; grid-template-columns: 55px 1fr 1fr 40px; gap: 8px; align-items: center; }
-  .cycle-row .idx { color: var(--text-mute); font-size: 11px; }
-  .cycle-row .er { color: var(--text); }
-  .cycle-row .m { text-align: right; font-weight: 700; }
-  .cycle-row.M1 .m { color: var(--game); }
-  .cycle-row.M2 .m { color: #fbbf24; }
-  .cycle-row .arrow { color: var(--text-mute); }
+  .footer { display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 14px; font-size: 12px; color: var(--dim); flex-shrink: 0;
+    background: var(--bg-elev); border-bottom: 1px solid var(--line); }
+  .footer b { color: var(--text); font-family: var(--mono); }
+  .footer .filter { padding: 4px 10px; border-radius: 6px; background: var(--bg-elev2);
+    border: 1px solid var(--line); color: var(--dim); font-size: 12px; }
+  .footer .filter.on { background: var(--purple); border-color: var(--purple); color: #fff; }
 
-  /* === STATS === */
-  table.stats { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; }
-  table.stats th { padding: 6px 4px; text-align: right; color: var(--text-dim);
-    border-bottom: 1px solid var(--line); font-weight: 500; font-size: 11px; }
-  table.stats th:first-child, table.stats td:first-child { text-align: left; }
-  table.stats td { padding: 5px 4px; text-align: right; border-bottom: 1px solid rgba(42,31,61,0.5); }
-  table.stats tr.total td { border-top: 2px solid var(--line); border-bottom: 0; padding-top: 8px;
-    font-weight: 700; color: var(--text); }
-  .m-chart { margin-top: 12px; display: flex; align-items: flex-end; gap: 3px; height: 100px; }
-  .m-chart .b { flex: 1; background: var(--start-gry); border-radius: 3px 3px 0 0;
-    position: relative; min-height: 2px; transition: height 200ms; }
-  .m-chart .b .lbl { position: absolute; bottom: -18px; left: 0; right: 0; text-align: center;
-    font-size: 10px; color: var(--text-mute); font-family: var(--mono); }
-  .m-chart .b .val { position: absolute; top: -14px; left: 0; right: 0; text-align: center;
-    font-size: 10px; color: var(--text); font-family: var(--mono); }
-  .m-chart-wrap { padding: 20px 0 24px; }
+  .input-bar { display: grid; grid-template-columns: 52px 1fr 92px; gap: 8px;
+    padding: 8px 12px 10px; background: var(--bg-elev); flex-shrink: 0;
+    border-top: 1px solid var(--line); }
+  .input-bar button, .input-bar input {
+    height: 46px; border-radius: 10px; background: var(--bg-elev2); border: 1px solid var(--line);
+    font-family: var(--mono); font-size: 18px; font-weight: 600; text-align: center;
+    letter-spacing: 4px; color: var(--text); }
+  .input-bar input::placeholder { color: var(--mute); font-weight: 400; letter-spacing: 6px; }
+  .input-bar .undo { font-size: 22px; letter-spacing: 0; font-weight: 400; color: var(--dim); padding: 0; }
+  .input-bar .undo:active { background: var(--bg-elev3); }
+  .input-bar .add { background: var(--amber); border-color: var(--amber); color: #1a0f00;
+    font-size: 15px; letter-spacing: 0.5px; }
+  .input-bar .add:active { background: #b8860b; }
 
-  /* === SETTINGS / IO === */
-  .io-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-  .io-row .btn { padding: 12px; background: var(--bg-elev2); border: 1px solid var(--line);
-    border-radius: 8px; text-align: left; color: var(--text); font-size: 14px; }
-  .io-row .btn.danger { color: #fca5a5; }
-  .io-row .btn small { display: block; color: var(--text-dim); font-size: 12px; margin-top: 2px; }
+  .menu-panel { position: fixed; top: 56px; right: 12px; z-index: 30;
+    background: var(--bg-elev2); border: 1px solid var(--line2); border-radius: 10px;
+    padding: 6px; min-width: 220px; box-shadow: var(--shadow); display: none; }
+  .menu-panel.open { display: block; }
+  .menu-panel button { display: block; width: 100%; text-align: left; padding: 10px 12px;
+    border-radius: 6px; font-size: 14px; color: var(--text); }
+  .menu-panel button:active { background: var(--bg-elev3); }
+  .menu-panel button.danger { color: var(--red); }
+  .menu-panel hr { border: 0; border-top: 1px solid var(--line); margin: 4px 0; }
 
-  /* === TOAST === */
-  #toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%);
-    background: var(--bg-elev2); border: 1px solid var(--line); border-radius: 8px;
-    padding: 10px 16px; font-size: 14px; z-index: 100; opacity: 0; pointer-events: none;
-    transition: opacity 200ms, transform 200ms;
-    max-width: calc(100% - 40px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  #toast.WIN { background: var(--win); color: #fff; border-color: var(--win); font-weight: 600; }
-  #toast.LOSS { background: var(--trigger); color: #fff; border-color: var(--trigger); font-weight: 600; }
-  #toast.TRIG { background: var(--start-gry); color: #fff; border-color: var(--start-gry); font-weight: 600; }
-
-  .section-title { color: var(--text-dim); font-size: 11px; text-transform: uppercase;
-    letter-spacing: 1px; margin: 14px 4px 6px; font-weight: 600; }
+  #toast { position: fixed; left: 50%; bottom: 78px; transform: translateX(-50%);
+    background: var(--bg-elev3); border: 1px solid var(--line2); border-radius: 8px;
+    padding: 9px 14px; font-size: 13px; z-index: 100; opacity: 0; pointer-events: none;
+    transition: opacity 180ms; max-width: calc(100% - 28px);
+    box-shadow: var(--shadow); text-align: center; color: var(--text); }
+  #toast.show { opacity: 1; }
+  #toast.WIN { background: var(--green); color: #fff; border-color: var(--green); font-weight: 700; }
+  #toast.LOSS { background: var(--red); color: #fff; border-color: var(--red); font-weight: 700; }
+  #toast.TRIG { background: var(--purple); color: #fff; border-color: var(--purple); font-weight: 700; }
 </style>
 </head>
 <body>
-<div id="root">
-  <div class="topbar">
-    <div class="row1">
-      <div class="brand">MIX3<span class="badge">v14</span></div>
-      <div class="kpi">Nr: <strong id="k-n">–</strong></div>
-    </div>
-    <div class="row2">
-      <span class="pill">Last WIN: <strong id="k-lastwin">–</strong></span>
-      <span class="pill">Sesja: <strong id="k-pnl" class="mono">±0 zł</strong></span>
-    </div>
+<div class="app">
+  <header>
+    <div class="title">MIX3 <b>v14</b> · TEST60 · T1+T2 · K8</div>
+    <button class="menu" id="btn-menu">☰</button>
+  </header>
+  <div class="tabs">
+    <button class="tab active" data-tab="T1">T1 <span class="badge" id="badge-T1">6</span></button>
+    <button class="tab" data-tab="T2">T2 <span class="badge" id="badge-T2">4</span></button>
   </div>
-  <main id="main"></main>
+  <div class="chips" id="chips"></div>
+  <div class="tiles">
+    <div class="tile base"><div class="lbl">Stan cyklu</div><div class="val" id="tile-base">–</div></div>
+    <div class="tile trig" id="tile-trig-wrap"><div class="lbl" id="tile-trig-lbl">Aktywny trigger</div><div class="val" id="tile-trig">–</div></div>
+    <div class="tile stats"><div class="lbl" id="tile-stats-lbl">Wyniki</div><div class="val" id="tile-stats">–</div></div>
+  </div>
+  <div class="table-wrap" id="tbl-wrap">
+    <table>
+      <thead><tr><th>Nr</th><th>Kod</th><th>Rola</th><th>K</th><th id="th-col">–</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <div class="footer">
+    <span>Kodów: <b id="n-codes">0</b> · Cykli: <b id="n-cycles">0</b> · PnL: <b id="pnl">0</b></span>
+    <button class="filter" id="filt">tylko eventy</button>
+  </div>
+  <div class="input-bar">
+    <button class="undo" id="undo" title="Cofnij">↶</button>
+    <input id="code" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="3" placeholder="000-999" autocomplete="off">
+    <button class="add" id="add">Dodaj</button>
+  </div>
 </div>
-<nav class="tabs">
-  <button data-tab="live" class="active"><span class="icon">▶</span>LIVE</button>
-  <button data-tab="input"><span class="icon">⌨</span>WPISZ</button>
-  <button data-tab="hist"><span class="icon">≡</span>HISTORIA</button>
-  <button data-tab="stats"><span class="icon">∑</span>STATY</button>
-</nav>
+<div class="menu-panel" id="menu-panel">
+  <button data-act="theme"><span id="theme-lbl">☾ Ciemny motyw</span></button>
+  <hr>
+  <button data-act="session">▶ Nowa sesja</button>
+  <hr>
+  <button data-act="export-json">↓ Eksport state JSON</button>
+  <button data-act="export-csv">↓ Eksport kodów CSV</button>
+  <button data-act="import">↑ Import JSON / CSV / TXT</button>
+  <hr>
+  <button data-act="clear" class="danger">✕ Wyczyść wszystkie kody</button>
+</div>
 <div id="toast"></div>
 
-<script id="seed" type="text/plain">001000000010200010001010011100001111201000000200001210000211000210010000011200100001000011011000000000000000010100000000010001001101001000101010001010001000010010001000000000000000010011000010000000110010001300010200000010000001110000100000000300000001001000011300000301010100000000000001000001010000010001001000101000010001210010100001010001001000001010000011001201110101201000211010110001011010000000200200011000000000000011000010001200000010000111000000200000001000010010100010301010001001000100010010010200000000000000000011100000000201000311000010101100000000000201101111000000110211001000200100001000300001001011010000201210000110010001010000000000000000200201010000201110100010001000001001000000000011000301101001010000011110010000000100000010000101200200300200000201000000200000000000010010201010001101101000100210000000010000001000100200200000001010000000001000001100000101100001000101201310100010000010110001001001010100000001001000000000201011000100101210010201000000000200001000000001100101200001001100001100100110010000010000010000010000010001200001000200000010310001000010001000010001011011000200110000200000000200001001000001010000011000000000011001210001100001110010110001010000210000101000010010000110001201010000000101001000010200000011110000010000100100000210200010001011001201001100200110000001001100000000000200000101000100100100010000100010000001000001001100001010111200300001000110000200000001200011000210001000000010210011100001110000000010000001011010001100001000011010200010101010210001300100000100200000110000001001200101211000000000000000001001001000000001001201200100010101000101000000000000011100010000000010001000010000100001001211110000101000101201000000001010100010000000010001010000000101000201000100100000011000010001000100110000000000000000000000101001001000000000000100200010010011210011010000000011010011001000000000010000000000311200000000010001010010000000100000210011101000300000000001010200000000301200000000000001000301011001200010000200200011100010001000000001201000001210000001001001000001000200000000010001000201011000000000000001000200110000000001010200000000101000000001000011001010001100001201000000000000000101010010210000000000011010001000201000100010010000000011310010010201001010010000010201000000000000201001101211110000000101001000000001000100000000001000000000000200001201010000011111100100101001000000011001001101010001000001000001000100200000001010000300010000000000110001001100001001000001010000010011200000011000000001000201300000000001001000100010100000101100001010311100010010010100001301100000011011010000100101000311100100000010000000110000210010010000000200000010010200200001100000001100200010010100200011300211011001000011000211000010111011001000001100100010010000100000000000201201000100000101100000000010000001000001000001000000001001000010000001001000000200101001000000000001000011001000010000200111310300200000101010000100011200010000010010000010110201000000000000000100100001010010011001000200000001101011010000000010011000011310200000000100010010000100001100300201010101000001001000101000010211010201000000300000100200010001000010000101201001000001001001010000000111100010100010010000000010011010000100001011001200001010101000000001100001000000001100010100000011210011100201000001100210101000010000000000000010000000000000110001000000001000001000001000100000000000000010010100110001310010000100100000100000001101100000011001100010200000011200000000010010110000200010010000110110110000010010000310000000301010211011101001110001100000011001000211000000000210010000010000101000000000000201001000000200200010111100010000200001001000010111000001210000011000000000011000101000201001101111000001000100200000110011010000011000011100000210000001100110200000011001310000000001010111100100110000001111011000100010000000010000000100000000000011010000010100010000010000010100300010110001000301000000000001000000200010001100000000111000000110010001310200011000010001000001111000000201010000100300000001000100000210200101000001101010210100011001000000011101000001000001000000001000001100000000011010000001000210000110000101000101000000010101100000000000011010000100000000001011001010000000100010001000000100200100211100011001000001001011000001010010000201000210000100200000000101201010100310000001000010010000210011000000000110010000100000000111000000200111001001000101000000010110011300200000110200110000000000200000101000000210100010010010000001010000000100010001000001010000000010000000000100200000211000001010001000000010000001110011000010100010001010010001200000000301001010200000011200001001010000100000200210010100301000000001100000000201010010000001010100010100201101001000001010100000100010001000000101110000210000100101011010001010300000001200001001000000101001000010000000000010010001200010010200010000010110000100111000000000200001010010111010100000310000000010000010210001000000001001001000100011100111000100000000000110201000010100000000200000010000001001211310201001010000011001000000101000000010000201000010000201100001200000011010110100000000000100000000100000000010000101000000000000100000210000000000100001101010111000000010100000000200010101000000000011001101010000200010001000300001010000010010000200001101000010010000110010011000001000011010000000000000001000000000100100010000101010000000000000000000100101101100201001000010000100210000100000000000000000010010200000100001000000010010011010000110000100201000010000001011010100000000100000311000000001001011001010001111000000000000000001010100101000101000100001010100000000111000000010000111200010000001000010000110100010110010101000000000000201001200001000100000010000200001110001011000000100001000110000000000211100001000001010010010001011000000000200111000100000000001000000011000001001000000000100000011200000000010000000001011001001000001100010010010000010100101000001000011001001110111100100101210200000001100100000000000010000000011011000000001200010000201001111211000000010011000000011000210000000000000000010001001210201100010000010000110101100000110000000201000201210000210010000001000100010001000110201000000010100001000000000011001010200200001101001011210000201010000010010000011300000300000200001001310200210200110001010310000000010200110010000100010110001110001000001011000301000011011001110001100000100010010101000000201000000010000300101000100200000110001000000000000001001010100010100000100010000101000001000000201001010010000100000000100000010100200100100010000000001010000000001000001010001010001000010101210000010100200300101000000000210000101000010000100000001000211100001011000010000100000000110001000000001101001001001000010000001001001001010000010000100111200001000000111000000000001000100010000011101111000000110000010010000000000000010200100000000010000011000000000010100000000001000000000000001000011000101010011200010001010310000100000210010000000000000000000001000000010000200010010001010001000100210000001100010300010000301200300000100210000000010001000010000000000010100011001201201100000000100010010310011001201000100010000001000001000010000000200100001200011000000001001201010000000001100010001000000000000011000311000000000200110000011110011200100000000310001100000000300010010110300000000001001100000000010010000010001001000000001000000100001000000010010100100001010000000010000300010000010200300100301011200001000000000201100001000000010001001000000000001000110010001001000000100000000001010000110000000101000000000000000310010011000010000111011001000100101000110000010000001001300001000000010011010001000000010001001011000000001000000010200001010011000000001001000000110000010000000011000300100000000101100210011000001210000011000110210000200000201011200101000001000210001011000000001100001201001201200001101001100001200001100000000000001000000000001000000001010011000201010000001000101310010000010001111000000000011201110010010000001100100000000011000010000011000000000000001200101101010000000210100001200110100210000111210000010200101000001001100100000000000101000100000000000000000000000210000001010200000001000010010000000000001000010100000100010000000010010000010200000000111200000010100000000000100210001100001001010001010000001010000001010010001001000010001000101311000000200100000000010001000000000100210100010200000010100200000010001201200001001001011000010000000210001110000000201010000110100001001101010300000000001001000000101011200000000000100000000011111001010011010010011210000010000001100000000100200000110011001010110001000000000010001100001010100011110010200000100010201001000001100000000000100000111010000100110001100000000001000100000000010200010010100000010100000010000201210000001201001301200010000101211010001000000000000100001000200000200110201000100000001000010010000000200011110100000010001210010111000001001010200000011200001000000010001001000200110001010110001001000010000010011000000011100000011001001310010100000011000110000000000010010111000010100010000001000000101011000011000011010101110101100100001010211000000010000010011010210000000200010000000001200000000000101001001000000000201200001101000211010300000200000000010000001300010010010000100010001010100200101001201000001100010300111100010000000000000100200000000000000110000000100010001200100110201010000011010001000000010010000001011010010000000100000000001001000000000000000210000000000000110201001010000010000000000010000100000010001100010000001000010200000110200000110210000011000001001100010000000001000000000010000010110000000001001010210000010011000010000310000111000000010001001000100000001010011011010100100010001300110000110010100200000000200001000000300000010010001001100100000100100000010301000001000000101300000000010000011110000000000000001210000010210000000011000011000001000001000011001010000000001100000200001001010111000111001000000000311010301101000000110000000100000200010010000001100000100000110200210201000100100001000210011211111001110000000200000101111000100111001000000011000100100000100101300000010100001100011000001010000010001001000010000100100000000000001010010101300000100200200011010200000001200100100111010000011010001000001001100000200000001000000000311000010010110001010001000000011001001001000010000010200000301110010000000110100200000210010000011010001100111001101100000001000001011000101210000001001001111001000000000010301001100010010001001010011100000200000000010010000000100010200000301000001001001001010000010001011110100000001310000110211000000000000200000101000100000010001000100010000010110010000211000211110000200100300000000100010000000111011001000000000000211001001011000000011010010011200100001200000001010100010111010200011100000000000010001001101011200001000000100100010000101201001001000001001300010000000010000210101001000200000100011211100300001011201001000200000000100000200000110000001300111000010110001100001100000200000210310010000010001000110110110000010101001000010000001300310000000100001000000000110310000000200000000300000010010010100000010000000000000011000001100110010200001000001010100100011000201010000001200001101010011300000010000000000000000000210011000201000200100100011200201000000010010100000000000000001010000100010111000000001000010301000010000300001000001000101000301201011000000000101110001001000100000010110100201000200000110000010000000000000200100100001000101011300111000000000000210000010000100200000001000000000000100100001000300000000000201100001000011000000200000200200111010101000001000010011101010000300200010100011111010010000201000010010000000311001100010111000011000000300110011000000001000000001200200000201210010110000000000000000011000201000200010001000000001000010000000000311101000110110000200001110101011011001001000010010001200110010001100000100010200010010010100101000000201000000001000100001211101011000100000101000100010001200010000000111000000011200000001010000001011100000100010001010111000200000000001001000201111010000001001000201100100201010010000000210011000210001001010010100000010001001000000301000000211100201110000000010110010010201010001000101000001100300211210000200010001000000010010100001010001101010000001001010110000000200000000001000100001001001310000000000000010000001000001201001001000001000000000301200000100010000100011100100001010000010200010101011000010100101001201000001000010000001110100000001000010000100000001100010001101011001000000010101000000210000000001000000010100200000001001000300200000000000210001000001010000001000000110101000001111011000010101000211010000201000000210000000010010100000010000100110110000000000301000011010001010010000000001000000211100010000100000100100001000011000000100000000000000000000001110000110010001100000100000000010010001011000000010000000000111001111201001100000000000210010100010010100100000001000000000100201200000001000001200210000000300201000000010000001000000000000000011000010011010111000000010010210000211101000000011000111000000200210010001000010000000000010000000000210001000000200001200000000111001010001011210200010011200010000001200100301001101000101000000001000111011101000310010000000201200001000000100000000301111010010010000000010000100100300000000200000000100000010100000000210100000001010300000211000210001211100110000000001000000100010000100000000000000000000001000001000010101000001001200001001100201001201110011001200000200000000000000000010201200000000000101010000200001000000010100010210100001201010011010000000010110000000001110010000100000100011000010111001201000000000001000010001001010200000000100000011001110011010011000000101210110000000301010201001000010000001000111000001001100101010100000010000010100001000000000010000000000000010000200001101000000010001000000001000001000011000100001000210200211000000010011001000000000001100000000000000010000100000100000011011010000110011000001001000000001000110100100000010000001110000010110301211000211001100000001000001001001001000110211100200000000110000000110000000000000301000000000100200000001111001210100010010000000001100000000010010000110100100000000011010000201100000301000010200000000110000101001000000010001110001000011000101001000000000000000200011110000001000000001010011000010000010010000010000200101000000000101110110010001011000200001211010201001010000000010010001000000000010010100000000000000000000100200110000200100011010200300010310000010001100100000000101000001000000210000000000200011000001111000100110000000000211200100200010010000000001011011011100101201000010310200010100111011010100100001300200001200000010001000100111101200110000000001001010000101001001000000000000000001000100001010010000000000100000210010110011210000001010010101000010010000010000200000000011100001010000200000111101010000200011000000000200001001000000310000000000000000110200000310000001000110000001011000210001111000100000001010001000000200010110000100110201011310011000001000010010001100211301110011000000200000110000311300000000000010200000010111001000010010000001001000000000101001001000000201000000000000000000000010001010101011000201000011010201001100010000010010010000100101010010211100010001011200211310001101000000010101000001211010001000000101100010000111001010300001101200210000000100010201010001100010000000000011100010000000010000000000010200201000000000000001300101001000010010000000110000000001100000000100001000000201110000000001301000301000000000000000001010210000000001001000000101000010000100011000200010010000000001100000200211001010011210000101010000000101300000001000000000000200100000000000000001110100110001011010100111000000000001111200000010000000000001000111200001000100100010100001000000011010201110000001001100000011000210010000001301100000100000111001000000000001110010000101011100010000000000200000000200010110010010000110001000000110001001100011010110010001201000010100000210000011100000010001001000101000001000011110201201101101000000001000010001000100000210000200000000110000000001300000301001100200000000000000000110001010300001000001201001000010001010000210011010000010011000000000001000010010200210010001000000200000200000201100100010010000001001000000001001211000000000000000010010000000001000000001001000001000001010011200000010010200110200101011011010110001100000000010001011000000210000011010111101001310100110000011000000010000200111200000000001010100201200110011201000211000000010011000101010100010000111300001000000000001201110000000001101010011000000110000000000200000010000110210200000001000001200100010200000100000000010101100001010001000001000101000100001010201000000000100000010011110000110010000100000000100010001100100101000000010000111000111011000000100001010001100000111100000011011100000000101010200000001001000111101201200200201001000200001011000010011200001101300000101000100201001010000100000000000010001000010000001010010200000010000000000000110000100000010000000010011001200100010000000100210000101000000010010200010001000001101110110000001001201000000011201000200000001000100000010000000010000010000000000001010010011001011200100200000001011001110111010201200200000000001000101000010010200201300100300000000010100000100100101010000000100000000000000000200201100100110100000101100000200000000000010001010100000100000000000011000000100010000010100100100010001001001110000010011001000011000000001010001001300000001201110000000301300100000001110000000210011200100300101000001000000210000100000210010201100010011000000200101200110100001001000201100000000010000000010301000010101000000011000010010000000001000110011000200200001000000011010010000100000001111000210011110011010000000110000000000100000000000000000201000001000201000010001000110110000101010000200000000001010010001000100200101000201000000200000000000000201000010300001000000000101000100010001001300000100010000000010000000000200000200210001000010010010210000011000100201100011110210000200000000010000101110110001001000101100010000000011101100011101000000001000010211110000000100000210000200010200100000010010000010101001000011101000000000100000001110000000000000200011000010101211000001311001100010000001000011001100110000001201001000101001200000000000000111011001000100100000001001001300000101000000000100010000001300011210001100100100100100011000010000000000001110000100210000111101200000001000001201100100010010000000000000100101010100210100001010000000100000100000100000200011000010000010001111011001010100000000011001000001010000001000000011000000000000011011211100100001000000200000000210000000201010000001000101000200000001300200011000000010000000010000100111010000101001100110001010010011001111100011300010010010000000200001100000010000000001000000000100000300100100210110000000000310210210010000200010110100001200000000000001101011300000010011000110010200200001100010010100011000000000100011000001200010110100300101101011100001110200000110010200000010301000010001100000000000001001101101010010011000000011100001011200200000010001010000001100110000010001100000201010100000010100000010300100001111100001000000010100001000100001000000000010000101000110000310010110010000100001100310001101001001010010001000011010000211000000000010200210010201010000001010000100310001011010100110100110100000000100000200000001010000001110200000000010000001001000100010001010000000001001000010010000000200001200200000000210000201000010011010110001000001100000011100000000100000210010000000000210110200200000011010001011000001010011210110010210200001100010001111210010110101100210000001000000100000001101000010000000000200100000000000010000010011000010010100010011001010000011000100000010010200210100010001200011010100110210210300010000000300010001001000100000110000000000010101000000000000011200110001001011200000010000100000200000000000000010000000000010000110010201000000001100011100000011100210011000110011000010000000110001001010110211200010001001011200000000210000010000000201011000000101000110111110200010000001010000011000100000001000101000011010001000300001000000010111001201010210011010000000000010100001001000200000200100000011000000010101111000100210111011000201111101001000100300001000000201000000000011000110201000010110000110110110011000101001010001010001211001100001001010000000010201001110201200000100011101000001011000011000000000000001100000200011000101000101100000200000000010100001000100010000000200010001200000000100001010001200110011310011000001000000100010010100210101100000200010000000010000000011000111001100000000010200101000001001001100001200010100000200011201200100301001300000010300001311010010010000100000000000001100100000000100000000000300101000101100001210000000001000000001010010001010000210001000011000001000001001100100011301011000000000000100000011200000101110000011000010000000101001000111011210010000100000101000000111000101010201110000000110200100001010310000100000110100101011200000100010000000010001101101100100000000010010310310210100000100000000010110100201001001000101010010001011000210100000110001100000001000010000101000001310101010001010000010001000300010000000010200000001011000000100000000011000000010100100210000101000011001200000000001000000000100011301300001000000210000100000100010000000001301000201100210210010000010000001000111000010000000000001000001100000000000011011000011001000100001010111000001301010000010100201000300200000000000100201111000000100300010001010201010100000210000000000001001000000000110000001200200011201200000000010100001010000000000100010000000000200011110001000000001010000001001010000000100101010300000000101000010001301000011000000000310210010001000200010000001001000101000000000010201010000001000001000300110000001101000200000010011110010201000010101010010000101000000010000001000010010200300110010010100201010100000010000100001010001010001010000100200011000210010110111000001201000000100001010000100000001001010001000001000111000010211010011010000000010210000010000000010300010000111000011010000000200100000100000000001201110201110100000200000001000010010000000001010001010100000001110000010000011000000000000010001001000001000001001001000000101101000000000000001000100000000000000001211101000000011200000000110200000000000100000100001300011200111300010200001001010000200011210010000000001001110000001100010010200110000000001301010001300011301000011000210000000000011000110010011100000010000000001200211000110001010000011010000000000010200001200010000000000000310111000000000000010101010101100010000010011010100210101001210010000000100001100301201100011110011000001001300001001101000010000011011200010010011001101200000001100010200000101010000100000000200100000100000110000310000000001300210010100000000011000000001000110000100000000300100001101010300010000001210000200001111010101010000000010001000110201001001000001000000110200000200110000100000010200100201210010000210000000010100100000000010001100100000000000010000000010001100010001010100000001001001010110010000000000200000001000001000200000000211100000100010001300000010000000110110300010000000000100010100201000011201000000000010000100101011000211310010000000100000000000210000110010000000000011000110310210010000101101100000000000000000010000000001001000001000001000010010001000110010000100000010010000000011200011000010000000000011201010000010000001000000000200010000101000000011000100200000200000200010000000000000000100000111111000000010001010310000010000000000011010000001000200010011011100000000010000000000000100100000200211100001200000000001001210100001000010000010000300000101000000000000001200001010000000000000000100001010211001200100001000010200001000100010011001211000100000001001000000010011200000000000010101001000000100000011100111000200200100200100000000000000110000010011001011000011100001100000001000001101000000000101301011011000010000000010000111000010000000001000001001300101010000000001000010201010011000101001200001001000100010011111000100010100100310011010011000200010001301210001110000001100200010010010200101100200000010011000011000000001000001100000011100011001011000001000100100000100211000200010200000000010011100200000110001010011000011000000010010010100010100010000010101000001000000010000311000210011000000111010000000000001101000001000000000101100011111001000010011000000201000001000001101101110100100000001001000000001100001300000000010001000111200200000200011010001001000010210010010300100101200100100000000000001010100010100010010000000011000010000000000001000000100201000010210001000000011200010000100201010201210000100001010001000010301200100101000201010010000000010100211200010110001010100000101100001000200200001000010100001001200000000010001011000110101000000010210000001201210010010010200300000301000000010001300101000001000001201010000001000200100000000010200000001110101000200200000000310000000211000000000000000101000000100010100100010000211010110001000300100100010201000100010210111000000010000011200010000000000011000110000001011100100000000000211000000000110000001111000001300000000100010100300000300000000010110110000000010000010200000201201000000101011010010000210000010010000010000010000000001000100000100011201000010010000001110000001200100100001010000110001000101110100100200001000201001000001000000100010000000011211200001001201210101011001200010011000000100010010000110010000301010010010000100000000011101010000000011010000001000110000000001200000001001001000110100000010000011000000110001010011000011001011101000000000001201301000000000100000001010010000100000111210000000000100210000010001200211110010011000010000000010300211000010010000000100010010000100010111110000000000000100010000010010100101000101301201110010001001100001000000210010000000000000101010001101000000000000000000001101000001000001111100010010100000100101000101000000110000200001100000200001001100010001200100001011000210001000000000010100000000000000300000010100000010000000010001201000000101001010000000100010101000101001110100000000000001011001000010001000001000000000001110010010000110001001000100001000311000000010101110100000111000000000010000300101201010000000000000001000000010211001201001010000001000010200000110010200001001110001200000211000000100201011000210010000010000200001000010200001210100010100001000000111010110000001000100010101210001000010000100001010010111000000000100010000000011000111000011000000100200000201001001010000010001111100101000100100001000010000001010000100210001001010201010010000000001000200101001001000001000000000001001010000000001001110010001010001000001000201210010010000000211010300000200011301111000000000000100101001100000001010001200000011000000000200000010011011110000000000000210000001001100000001001000000211011000011000000201000101001000211100110010001100000000311000001000200000000001000200010000201200001000100101001111311100010010001000010200001001110010000000000210000010100000000110000000000110201010010101011000100010110101000010000010001010000010110100010010010200300010001000010000000001001001000100010111110111000010000010210000200010010010300000000000201010000010311100000000201200110000000000000200110000010001210000001201000000000011000000110100310011001000000000000010001000001000000000000000010310100000010010000001000210000001010000000000100010100100001100101010001001001011000200010100001001011100310001210101010100000010010001301001010201101100001111010100200101010000010201000100010001001000200000010011001000100000010000001000001001000010000010001100010010010000001011300000111011000110000210000010001210001010000001000011100101010111111010100010001100010100000200001010201001000200001011000000000000111000100001001001200001300310001000000001000000211311000101211000000000111000111001000000001000010001001100001200000101000011100000100100000101200000100000111000010200000000100001111010000011010010101000100000010100000100000300001000110000000100001011001000001100000010101200000010010100100001000011200100101100000010000210100310000110000010101010101100000200000101000000100001011100000201000010000000001010000210100001000000010011000010000000100010011101201000001100000001101010101111000000011000001200200000011100010010000000000300000101011000001010101100000001301000000110100000100100001100011000000001000000110000000001001001000011301010000000011101000100010001101110000000000010200010000100001200310010010110000100100000010000001010001000000201000300100000000011101010001110000011100000000210000010011001001000010000201010000010000001210000101000000000200000100010000011000101001001000000100001000001000000010000001000200000101001010100000101200000201000000000100010010010010110010210001011000200000010110001101000000101000000001000000000310011001000100000000000000010100011201200011000200100010011001200000000000100100000001100100000000000000010000200011000211010000001110010010000001011001000011000200101000000200000001000010000210200010010011211001010010101011010200001010001001000000100001101010001201200000001201010000200011001001010201000001011011000000000010010011001010010000000001300200010000000011001000001010101101010000300001000200001000001210100200001111111110000010000000101101000100000000000010300000010001100000000010010100000011000111000200010010301100000000011000200001001000010011010200000010000111000101010010000200001000311001201000101011000011000100000000000000300010000000200000101010000000001200000000000100000001000200110210100100100010100110001000100000201210200101010000000000011011010310210201200001111011001000200000000000300010000300010000000100000100000100001000200010000100201010000100011010010000110011001010000001001010000001000000010000010000010100101100100000010000011210000101000001000000000000100000000000011110211100000300210210110000011000001000000001000001000200110001100201100001100001111100001000310000000200001000100110200000000000010100000311001000301000010000010110000000110001001110010011001001001101200001001000310000000100000000001000010001100000000000000000001210310000011000011200010000001101001301200111000000000000001210000000000001000001011001300201000011100001300011010000010000101000000110111201100200200010001001000000100000010210010000000001100001011110111100210000001011201000200001001000011000000000100000000101100010000001000100301000001010310010000110101200000100300100001101000011110000200000100000010001001000010001011011111001000110000100000010100201101110000001111200000000010000011011000000010000001100001200000000001200010011211011200000000100010011210001200101000011110101000000000100001001001101111201000010100211101001000201010000000010000000001101000111001001000000010000000200100010000100000000100001001000010000010000111100001100110000010001201000200011101100201100000001000000101000000000011100100010101000200010010111000201001210010000300210100001100000100101000000000111011201000001001311010010000210001210111001111000010300011001111000000000000001000001011000101001100110000010011000000010000000000001100100000100110010000000100210010010111001001200210010100001210000001001200000010200000211011100000100300010010210200110001000200010010001110101001310300001000000110100010110000100010001000201000000001000011010200000001100000010000101300001011100010000010100010301000000000010200010100000110000100200100000010001000011110001001000201000010000000000011100310101001000001000000001000000010100110010011001200000300010110200000001200000000000000200001101310010100011010010200200100000000100001000100200010000100100000010000000210010201000010011101000100001000000201000301000000000011000200001001101101200000001000010001001210110000010000110011300110001211200010210011000001010310001110211101011001010000010010010000010000000001000010000000010100000010210010201000001100000111000001301000000201011200101000101010300110000010001200110110101000011000000000011010000200100000000100000110001001001311000011001011010010001000001010001000101011100010100010000001000000010001011000000000101110001000000000000010300200100011011010200000000201010200010010301000001300100200001300100100100100001100210100001210110001010000001201000010000110000200010001001000000011000001100000001010000100001100200011011000011110010100010101000100001000000010000000000011001000200000000110200000000000000010210010000010000111200010100300301101000000000000300000010100000200310000000001001000000100110000010000300100200001110001010000000000101101000101100000200001000000100010010000011000000001011110011011010000000110000000201100010110010200000200110000001100100101110100010011000000310000001000000011210000010000000001301010110010210010001000011001000010001001100000100100010200000101310001010210001100100010011000011000000201300011010010000001000300000100000000001010000000000000010110010000110200011000100100010000010011011001001110300001000000210000000310010000000000011200100001000200001011000000011000000000110000211001000000001000000010010100011001100010101101000000000000100001000011001210001010000100001000101000001000001011010001000011000010001000100011000000001100011000111200001001000000100010010000001000011011211000001001000100000201010100200001101000001000000110000000200001000001000200000001101001010001000010101201300200000010000000000000210000100010000000101001000000101110001110201000010000201201000000001000000101000000000001001100011000211000110001000000300200000001001011001110100100000101001001000011000010010000010001011000000201000000010201010110200300001011300111210200100110011110000001000000001000000111001001000001200100000000000010010010110200000000000001010200001000001001100010100011010010011000001011001100201000001010100101010000000010000001010000010010011010301110001010011000000001110000200000000101000000000300001010000110000001000210010101200110101110011001001110000011000000001100000110000000000010010101010101001001100000100010010310000000311000000010000010000010000100000101101010001000000000010010200000000001000000001000111000011200001210100010100111011010000000001001000000111000000001101111000000010210200010000000000000210001010100001000000001001010000011000000000100010000000001000000001000000010201201000000000001100000100300010101000010110010000000001000001000111001000210010011010110000100301010000200210101100000000001000310100100201110001011000201201000010211001101000000110100010200100000301011000100000110300000100000210000001100000000211000001200200210111001000001001010010010110100211010000010000000001000001200200310210000101110101000311100001100000010001010001000100000000000000000000001000101100000100000100100110200001000001010000001100011001011010000111101101011000201310000000001100000000001000100010200011001211000010000001000000200010000010000201000000000000010000000100201000101010011000100010000200010200100100000000000001000000001201010000100000000110001200100100011010000001010000100011011000011000100000300000200001101010200010210310000210110210000000001200000010000000000000000000000011000000000010010200110300110211100000000200010110001110010000110000001201000010001000010110000010010010101001001000010100200000000100010000310000000010010000000010000001010101210000000310001000000001000010001310000101000200200000001001001100000311001001100010000010001000010001000110200000110000001010100100000000111000200010200010010010000000000100010010000201001000101000000000001001011210101110010001001100011010000000101001000211001001000100000000200300100000000000000100010201100000001001201011001000010000011000000100000010100000201000000000000200200210011010110110001300001010100001210001001000101100001200010010001301201000000000011000011000100100000001000000001000010011110100110001100001001110010001200211011010000001000001000010001010100000001001100210100100010100000000100001000000210301000001110010000000200001001010001000000011100010011201300000200100001100000000100110000000010200001200000000200011100201000000000000011200100201011000100201000000000100000000001000010010000010201100101001200010011100000000000000001000000001010000011010110210100010200010210010000001000211100001100001010010000111100011201101001200010201200010010011101000011301011101010110000211010001000100010100000100200010011000010001000001000300301210000000010100010000000011011000000010101011301000211010000100000101000010001110000010000110101000000201000110000000001001200000000310000000100000200310000000000111100210000000111000001011000000000000001010000000000000000010010010000000000111100010101000200200010010200000001010000100001000110300000001101301100000011000001000000110011010010000010000200100000000000000011010200000010200100010000210010311010000011001000001001001210210000200210100000100000000000001000200100200000200000011300000000000001010000010010100001010010000010001000000001000100000000010000111001310010010001210000110000000000201001000001001000000000000201200001000000000000000000000011001010001000010000001111000100011100011001001000110010100010000100000211010100100000000001000000000100001101010011001000000001100001001000210001000201000300210000200000111000110001000000010010000011100001011110110001000001000100001001000000000000000000111000100101000000000000000010000210010110000001110010000200310011010110010301010010200101100000001000010210000100010000000200000010001010110001010100000001210000001100000200000000000010010100100000010001100000010201000200000010200010000101000300000101311000000000000000000001311000000100000001100000001110100001011000001000000111010000200000010010010200001010011001000001210100010000001200110000000001110001011000200011001000000011000210301011010000110000000000100300000010100000010110000200010001001000001111101001110000100110010001000011001200011000210001000100001011000110001011011010100100010010000000301011011111001000001001011000000000301011110000001001200100300011000000100000210001001001200000000001010000000210001200000000000110000010110000110000000010001200010200001000000001000011100000100010010201311000000111000100200310000000000001001000201201001200000010000000010100010210000000010010011211101000000011010011000011200010010001001000000000001000100101100100100000210000100000100000011000010001100200010011000100000100101000100001000001110200110000101110010011011000001000011000010000000010201000001000200100100010000001000010000000000100200001101300010200001010201200301000000101000211211000211000000201100000000001110000000310011101000000000011000000011101001010100000010310000001100000111001300001101011000200100111000300000000000000000211110001011000110100111010101101000000001100010001010011010010310010000010000000010010010010000001100000010010010</script>
+<script id="seed" type="text/plain">001000000010200010001010011100001111201000000200001210000211000210010000011200100001000011011000000000000000010100000000010001001101001000101010001010001000010010001000000000000000010011000010000000110010001300010200000010000001110000100000000300000001001000011300000301010100000000000001000001010000010001001000101000010001210010100001010001001000001010000011001201110101201000211010110001011010000000200200011000000000000011000010001200000010000111000000200000001000010010100010301010001001000100010010010200000000000000000011100000000201000311000010101100000000000201101111000000110211001000200100001000300001001011010000201210000110010001010000000000000000200201010000201110100010001000001001000000000011000301101001010000011110010000000100000010000101200200300200000201000000200000000000010010201010001101101000100210000000010000001000100200200000001010000000001000001100000101100001000101201310100010000010110001001001010100000001001000000000201011000100101210010201000000000200001000000001100101200001001100001100100110010000010000010000010000010001200001000200000010310001000010001000010001011011000200110000200000000200001001000001010000011000000000011001210001100001110010110001010000210000101000010010000110001201010000000101001000010200000011110000010000100100000210200010001011001201001100200110000001001100000000000200000101000100100100010000100010000001000001001100001010111200300001000110000200000001200011000210001000000010210011100001110000000010000001011010001100001000011010200010101010210001300100000100200000110000001001200101211000000000000000001001001000000001001201200100010101000101000000000000011100010000000010001000010000100001001211110000101000101201000000001010100010000000010001010000000101000201000100100000011000010001000100110000000000000000000000101001001000000000000100200010010011210011010000000011010011001000000000010000000000311200000000010001010010000000100000210011101000300000000001010200000000301200000000000001000301011001200010000200200011100010001000000001201000001210000001001001000001000200000000010001000201011000000000000001000200110000000001010200000000101000000001000011001010001100001201000000000000000101010010210000000000011010001000201000100010010000000011310010010201001010010000010201000000000000201001101211110000000101001000000001000100000000001000000000000200001201010000011111100100101001000000011001001101010001000001000001000100200000001010000300010000000000110001001100001001000001010000010011200000011000000001000201300000000001001000100010100000101100001010311100010010010100001301100000011011010000100101000311100100000010000000110000210010010000000200000010010200200001100000001100200010010100200011300211011001000011000211000010111011001000001100100010010000100000000000201201000100000101100000000010000001000001000001000000001001000010000001001000000200101001000000000001000011001000010000200111310300200000101010000100011200010000010010000010110201000000000000000100100001010010011001000200000001101011010000000010011000011310200000000100010010000100001100300201010101000001001000101000010211010201000000300000100200010001000010000101201001000001001001010000000111100010100010010000000010011010000100001011001200001010101000000001100001000000001100010100000011210011100201000001100210101000010000000000000010000000000000110001000000001000001000001000100000000000000010010100110001310010000100100000100000001101100000011001100010200000011200000000010010110000200010010000110110110000010010000310000000301010211011101001110001100000011001000211000000000210010000010000101000000000000201001000000200200010111100010000200001001000010111000001210000011000000000011000101000201001101111000001000100200000110011010000011000011100000210000001100110200000011001310000000001010111100100110000001111011000100010000000010000000100000000000011010000010100010000010000010100300010110001000301000000000001000000200010001100000000111000000110010001310200011000010001000001111000000201010000100300000001000100000210200101000001101010210100011001000000011101000001000001000000001000001100000000011010000001000210000110000101000101000000010101100000000000011010000100000000001011001010000000100010001000000100200100211100011001000001001011000001010010000201000210000100200000000101201010100310000001000010010000210011000000000110010000100000000111000000200111001001000101000000010110011300200000110200110000000000200000101000000210100010010010000001010000000100010001000001010000000010000000000100200000211000001010001000000010000001110011000010100010001010010001200000000301001010200000011200001001010000100000200210010100301000000001100000000201010010000001010100010100201101001000001010100000100010001000000101110000210000100101011010001010300000001200001001000000101001000010000000000010010001200010010200010000010110000100111000000000200001010010111010100000310000000010000010210001000000001001001000100011100111000100000000000110201000010100000000200000010000001001211310201001010000011001000000101000000010000201000010000201100001200000011010110100000000000100000000100000000010000101000000000000100000210000000000100001101010111000000010100000000200010101000000000011001101010000200010001000300001010000010010000200001101000010010000110010011000001000011010000000000000001000000000100100010000101010000000000000000000100101101100201001000010000100210000100000000000000000010010200000100001000000010010011010000110000100201000010000001011010100000000100000311000000001001011001010001111000000000000000001010100101000101000100001010100000000111000000010000111200010000001000010000110100010110010101000000000000201001200001000100000010000200001110001011000000100001000110000000000211100001000001010010010001011000000000200111000100000000001000000011000001001000000000100000011200000000010000000001011001001000001100010010010000010100101000001000011001001110111100100101210200000001100100000000000010000000011011000000001200010000201001111211000000010011000000011000210000000000000000010001001210201100010000010000110101100000110000000201000201210000210010000001000100010001000110201000000010100001000000000011001010200200001101001011210000201010000010010000011300000300000200001001310200210200110001010310000000010200110010000100010110001110001000001011000301000011011001110001100000100010010101000000201000000010000300101000100200000110001000000000000001001010100010100000100010000101000001000000201001010010000100000000100000010100200100100010000000001010000000001000001010001010001000010101210000010100200300101000000000210000101000010000100000001000211100001011000010000100000000110001000000001101001001001000010000001001001001010000010000100111200001000000111000000000001000100010000011101111000000110000010010000000000000010200100000000010000011000000000010100000000001000000000000001000011000101010011200010001010310000100000210010000000000000000000001000000010000200010010001010001000100210000001100010300010000301200300000100210000000010001000010000000000010100011001201201100000000100010010310011001201000100010000001000001000010000000200100001200011000000001001201010000000001100010001000000000000011000311000000000200110000011110011200100000000310001100000000300010010110300000000001001100000000010010000010001001000000001000000100001000000010010100100001010000000010000300010000010200300100301011200001000000000201100001000000010001001000000000001000110010001001000000100000000001010000110000000101000000000000000310010011000010000111011001000100101000110000010000001001300001000000010011010001000000010001001011000000001000000010200001010011000000001001000000110000010000000011000300100000000101100210011000001210000011000110210000200000201011200101000001000210001011000000001100001201001201200001101001100001200001100000000000001000000000001000000001010011000201010000001000101310010000010001111000000000011201110010010000001100100000000011000010000011000000000000001200101101010000000210100001200110100210000111210000010200101000001001100100000000000101000100000000000000000000000210000001010200000001000010010000000000001000010100000100010000000010010000010200000000111200000010100000000000100210001100001001010001010000001010000001010010001001000010001000101311000000200100000000010001000000000100210100010200000010100200000010001201200001001001011000010000000210001110000000201010000110100001001101010300000000001001000000101011200000000000100000000011111001010011010010011210000010000001100000000100200000110011001010110001000000000010001100001010100011110010200000100010201001000001100000000000100000111010000100110001100000000001000100000000010200010010100000010100000010000201210000001201001301200010000101211010001000000000000100001000200000200110201000100000001000010010000000200011110100000010001210010111000001001010200000011200001000000010001001000200110001010110001001000010000010011000000011100000011001001310010100000011000110000000000010010111000010100010000001000000101011000011000011010101110101100100001010211000000010000010011010210000000200010000000001200000000000101001001000000000201200001101000211010300000200000000010000001300010010010000100010001010100200101001201000001100010300111100010000000000000100200000000000000110000000100010001200100110201010000011010001000000010010000001011010010000000100000000001001000000000000000210000000000000110201001010000010000000000010000100000010001100010000001000010200000110200000110210000011000001001100010000000001000000000010000010110000000001001010210000010011000010000310000111000000010001001000100000001010011011010100100010001300110000110010100200000000200001000000300000010010001001100100000100100000010301000001000000101300000000010000011110000000000000001210000010210000000011000011000001000001000011001010000000001100000200001001010111000111001000000000311010301101000000110000000100000200010010000001100000100000110200210201000100100001000210011211111001110000000200000101111000100111001000000011000100100000100101300000010100001100011000001010000010001001000010000100100000000000001010010101300000100200200011010200000001200100100111010000011010001000001001100000200000001000000000311000010010110001010001000000011001001001000010000010200000301110010000000110100200000210010000011010001100111001101100000001000001011000101210000001001001111001000000000010301001100010010001001010011100000200000000010010000000100010200000301000001001001001010000010001011110100000001310000110211000000000000200000101000100000010001000100010000010110010000211000211110000200100300000000100010000000111011001000000000000211001001011000000011010010011200100001200000001010100010111010200011100000000000010001001101011200001000000100100010000101201001001000001001300010000000010000210101001000200000100011211100300001011201001000200000000100000200000110000001300111000010110001100001100000200000210310010000010001000110110110000010101001000010000001300310000000100001000000000110310000000200000000300000010010010100000010000000000000011000001100110010200001000001010100100011000201010000001200001101010011300000010000000000000000000210011000201000200100100011200201000000010010100000000000000001010000100010111000000001000010301000010000300001000001000101000301201011000000000101110001001000100000010110100201000200000110000010000000000000200100100001000101011300111000000000000210000010000100200000001000000000000100100001000300000000000201100001000011000000200000200200111010101000001000010011101010000300200010100011111010010000201000010010000000311001100010111000011000000300110011000000001000000001200200000201210010110000000000000000011000201000200010001000000001000010000000000311101000110110000200001110101011011001001000010010001200110010001100000100010200010010010100101000000201000000001000100001211101011000100000101000100010001200010000000111000000011200000001010000001011100000100010001010111000200000000001001000201111010000001001000201100100201010010000000210011000210001001010010100000010001001000000301000000211100201110000000010110010010201010001000101000001100300211210000200010001000000010010100001010001101010000001001010110000000200000000001000100001001001310000000000000010000001000001201001001000001000000000301200000100010000100011100100001010000010200010101011000010100101001201000001000010000001110100000001000010000100000001100010001101011001000000010101000000210000000001000000010100200000001001000300200000000000210001000001010000001000000110101000001111011000010101000211010000201000000210000000010010100000010000100110110000000000301000011010001010010000000001000000211100010000100000100100001000011000000100000000000000000000001110000110010001100000100000000010010001011000000010000000000111001111201001100000000000210010100010010100100000001000000000100201200000001000001200210000000300201000000010000001000000000000000011000010011010111000000010010210000211101000000011000111000000200210010001000010000000000010000000000210001000000200001200000000111001010001011210200010011200010000001200100301001101000101000000001000111011101000310010000000201200001000000100000000301111010010010000000010000100100300000000200000000100000010100000000210100000001010300000211000210001211100110000000001000000100010000100000000000000000000001000001000010101000001001200001001100201001201110011001200000200000000000000000010201200000000000101010000200001000000010100010210100001201010011010000000010110000000001110010000100000100011000010111001201000000000001000010001001010200000000100000011001110011010011000000101210110000000301010201001000010000001000111000001001100101010100000010000010100001000000000010000000000000010000200001101000000010001000000001000001000011000100001000210200211000000010011001000000000001100000000000000010000100000100000011011010000110011000001001000000001000110100100000010000001110000010110301211000211001100000001000001001001001000110211100200000000110000000110000000000000301000000000100200000001111001210100010010000000001100000000010010000110100100000000011010000201100000301000010200000000110000101001000000010001110001000011000101001000000000000000200011110000001000000001010011000010000010010000010000200101000000000101110110010001011000200001211010201001010000000010010001000000000010010100000000000000000000100200110000200100011010200300010310000010001100100000000101000001000000210000000000200011000001111000100110000000000211200100200010010000000001011011011100101201000010310200010100111011010100100001300200001200000010001000100111101200110000000001001010000101001001000000000000000001000100001010010000000000100000210010110011210000001010010101000010010000010000200000000011100001010000200000111101010000200011000000000200001001000000310000000000000000110200000310000001000110000001011000210001111000100000001010001000000200010110000100110201011310011000001000010010001100211301110011000000200000110000311300000000000010200000010111001000010010000001001000000000101001001000000201000000000000000000000010001010101011000201000011010201001100010000010010010000100101010010211100010001011200211310001101000000010101000001211010001000000101100010000111001010300001101200210000000100010201010001100010000000000011100010000000010000000000010200201000000000000001300101001000010010000000110000000001100000000100001000000201110000000001301000301000000000000000001010210000000001001000000101000010000100011000200010010000000001100000200211001010011210000101010000000101300000001000000000000200100000000000000001110100110001011010100111000000000001111200000010000000000001000111200001000100100010100001000000011010201110000001001100000011000210010000001301100000100000111001000000000001110010000101011100010000000000200000000200010110010010000110001000000110001001100011010110010001201000010100000210000011100000010001001000101000001000011110201201101101000000001000010001000100000210000200000000110000000001300000301001100200000000000000000110001010300001000001201001000010001010000210011010000010011000000000001000010010200210010001000000200000200000201100100010010000001001000000001001211000000000000000010010000000001000000001001000001000001010011200000010010200110200101011011010110001100000000010001011000000210000011010111101001310100110000011000000010000200111200000000001010100201200110011201000211000000010011000101010100010000111300001000000000001201110000000001101010011000000110000000000200000010000110210200000001000001200100010200000100000000010101100001010001000001000101000100001010201000000000100000010011110000110010000100000000100010001100100101000000010000111000111011000000100001010001100000111100000011011100000000101010200000001001000111101201200200201001000200001011000010011200001101300000101000100201001010000100000000000010001000010000001010010200000010000000000000110000100000010000000010011001200100010000000100210000101000000010010200010001000001101110110000001001201000000011201000200000001000100000010000000010000010000000000001010010011001011200100200000001011001110111010201200200000000001000101000010010200201300100300000000010100000100100101010000000100000000000000000200201100100110100000101100000200000000000010001010100000100000000000011000000100010000010100100100010001001001110000010011001000011000000001010001001300000001201110000000301300100000001110000000210011200100300101000001000000210000100000210010201100010011000000200101200110100001001000201100000000010000000010301000010101000000011000010010000000001000110011000200200001000000011010010000100000001111000210011110011010000000110000000000100000000000000000201000001000201000010001000110110000101010000200000000001010010001000100200101000201000000200000000000000201000010300001000000000101000100010001001300000100010000000010000000000200000200210001000010010010210000011000100201100011110210000200000000010000101110110001001000101100010000000011101100011101000000001000010211110000000100000210000200010200100000010010000010101001000011101000000000100000001110000000000000200011000010101211000001311001100010000001000011001100110000001201001000101001200000000000000111011001000100100000001001001300000101000000000100010000001300011210001100100100100100011000010000000000001110000100210000111101200000001000001201100100010010000000000000100101010100210100001010000000100000100000100000200011000010000010001111011001010100000000011001000001010000001000000011000000000000011011211100100001000000200000000210000000201010000001000101000200000001300200011000000010000000010000100111010000101001100110001010010011001111100011300010010010000000200001100000010000000001000000000100000300100100210110000000000310210210010000200010110100001200000000000001101011300000010011000110010200200001100010010100011000000000100011000001200010110100300101101011100001110200000110010200000010301000010001100000000000001001101101010010011000000011100001011200200000010001010000001100110000010001100000201010100000010100000010300100001111100001000000010100001000100001000000000010000101000110000310010110010000100001100310001101001001010010001000011010000211000000000010200210010201010000001010000100310001011010100110100110100000000100000200000001010000001110200000000010000001001000100010001010000000001001000010010000000200001200200000000210000201000010011010110001000001100000011100000000100000210010000000000210110200200000011010001011000001010011210110010210200001100010001111210010110101100210000001000000100000001101000010000000000200100000000000010000010011000010010100010011001010000011000100000010010200210100010001200011010100110210210300010000000300010001001000100000110000000000010101000000000000011200110001001011200000010000100000200000000000000010000000000010000110010201000000001100011100000011100210011000110011000010000000110001001010110211200010001001011200000000210000010000000201011000000101000110111110200010000001010000011000100000001000101000011010001000300001000000010111001201010210011010000000000010100001001000200000200100000011000000010101111000100210111011000201111101001000100300001000000201000000000011000110201000010110000110110110011000101001010001010001211001100001001010000000010201001110201200000100011101000001011000011000000000000001100000200011000101000101100000200000000010100001000100010000000200010001200000000100001010001200110011310011000001000000100010010100210101100000200010000000010000000011000111001100000000010200101000001001001100001200010100000200011201200100301001300000010300001311010010010000100000000000001100100000000100000000000300101000101100001210000000001000000001010010001010000210001000011000001000001001100100011301011000000000000100000011200000101110000011000010000000101001000111011210010000100000101000000111000101010201110000000110200100001010310000100000110100101011200000100010000000010001101101100100000000010010310310210100000100000000010110100201001001000101010010001011000210100000110001100000001000010000101000001310101010001010000010001000300010000000010200000001011000000100000000011000000010100100210000101000011001200000000001000000000100011301300001000000210000100000100010000000001301000201100210210010000010000001000111000010000000000001000001100000000000011011000011001000100001010111000001301010000010100201000300200000000000100201111000000100300010001010201010100000210000000000001001000000000110000001200200011201200000000010100001010000000000100010000000000200011110001000000001010000001001010000000100101010300000000101000010001301000011000000000310210010001000200010000001001000101000000000010201010000001000001000300110000001101000200000010011110010201000010101010010000101000000010000001000010010200300110010010100201010100000010000100001010001010001010000100200011000210010110111000001201000000100001010000100000001001010001000001000111000010211010011010000000010210000010000000010300010000111000011010000000200100000100000000001201110201110100000200000001000010010000000001010001010100000001110000010000011000000000000010001001000001000001001001000000101101000000000000001000100000000000000001211101000000011200000000110200000000000100000100001300011200111300010200001001010000200011210010000000001001110000001100010010200110000000001301010001300011301000011000210000000000011000110010011100000010000000001200211000110001010000011010000000000010200001200010000000000000310111000000000000010101010101100010000010011010100210101001210010000000100001100301201100011110011000001001300001001101000010000011011200010010011001101200000001100010200000101010000100000000200100000100000110000310000000001300210010100000000011000000001000110000100000000300100001101010300010000001210000200001111010101010000000010001000110201001001000001000000110200000200110000100000010200100201210010000210000000010100100000000010001100100000000000010000000010001100010001010100000001001001010110010000000000200000001000001000200000000211100000100010001300000010000000110110300010000000000100010100201000011201000000000010000100101011000211310010000000100000000000210000110010000000000011000110310210010000101101100000000000000000010000000001001000001000001000010010001000110010000100000010010000000011200011000010000000000011201010000010000001000000000200010000101000000011000100200000200000200010000000000000000100000111111000000010001010310000010000000000011010000001000200010011011100000000010000000000000100100000200211100001200000000001001210100001000010000010000300000101000000000000001200001010000000000000000100001010211001200100001000010200001000100010011001211000100000001001000000010011200000000000010101001000000100000011100111000200200100200100000000000000110000010011001011000011100001100000001000001101000000000101301011011000010000000010000111000010000000001000001001300101010000000001000010201010011000101001200001001000100010011111000100010100100310011010011000200010001301210001110000001100200010010010200101100200000010011000011000000001000001100000011100011001011000001000100100000100211000200010200000000010011100200000110001010011000011000000010010010100010100010000010101000001000000010000311000210011000000111010000000000001101000001000000000101100011111001000010011000000201000001000001101101110100100000001001000000001100001300000000010001000111200200000200011010001001000010210010010300100101200100100000000000001010100010100010010000000011000010000000000001000000100201000010210001000000011200010000100201010201210000100001010001000010301200100101000201010010000000010100211200010110001010100000101100001000200200001000010100001001200000000010001011000110101000000010210000001201210010010010200300000301000000010001300101000001000001201010000001000200100000000010200000001110101000200200000000310000000211000000000000000101000000100010100100010000211010110001000300100100010201000100010210111000000010000011200010000000000011000110000001011100100000000000211000000000110000001111000001300000000100010100300000300000000010110110000000010000010200000201201000000101011010010000210000010010000010000010000000001000100000100011201000010010000001110000001200100100001010000110001000101110100100200001000201001000001000000100010000000011211200001001201210101011001200010011000000100010010000110010000301010010010000100000000011101010000000011010000001000110000000001200000001001001000110100000010000011000000110001010011000011001011101000000000001201301000000000100000001010010000100000111210000000000100210000010001200211110010011000010000000010300211000010010000000100010010000100010111110000000000000100010000010010100101000101301201110010001001100001000000210010000000000000101010001101000000000000000000001101000001000001111100010010100000100101000101000000110000200001100000200001001100010001200100001011000210001000000000010100000000000000300000010100000010000000010001201000000101001010000000100010101000101001110100000000000001011001000010001000001000000000001110010010000110001001000100001000311000000010101110100000111000000000010000300101201010000000000000001000000010211001201001010000001000010200000110010200001001110001200000211000000100201011000210010000010000200001000010200001210100010100001000000111010110000001000100010101210001000010000100001010010111000000000100010000000011000111000011000000100200000201001001010000010001111100101000100100001000010000001010000100210001001010201010010000000001000200101001001000001000000000001001010000000001001110010001010001000001000201210010010000000211010300000200011301111000000000000100101001100000001010001200000011000000000200000010011011110000000000000210000001001100000001001000000211011000011000000201000101001000211100110010001100000000311000001000200000000001000200010000201200001000100101001111311100010010001000010200001001110010000000000210000010100000000110000000000110201010010101011000100010110101000010000010001010000010110100010010010200300010001000010000000001001001000100010111110111000010000010210000200010010010300000000000201010000010311100000000201200110000000000000200110000010001210000001201000000000011000000110100310011001000000000000010001000001000000000000000010310100000010010000001000210000001010000000000100010100100001100101010001001001011000200010100001001011100310001210101010100000010010001301001010201101100001111010100200101010000010201000100010001001000200000010011001000100000010000001000001001000010000010001100010010010000001011300000111011000110000210000010001210001010000001000011100101010111111010100010001100010100000200001010201001000200001011000000000000111000100001001001200001300310001000000001000000211311000101211000000000111000111001000000001000010001001100001200000101000011100000100100000101200000100000111000010200000000100001111010000011010010101000100000010100000100000300001000110000000100001011001000001100000010101200000010010100100001000011200100101100000010000210100310000110000010101010101100000200000101000000100001011100000201000010000000001010000210100001000000010011000010000000100010011101201000001100000001101010101111000000011000001200200000011100010010000000000300000101011000001010101100000001301000000110100000100100001100011000000001000000110000000001001001000011301010000000011101000100010001101110000000000010200010000100001200310010010110000100100000010000001010001000000201000300100000000011101010001110000011100000000210000010011001001000010000201010000010000001210000101000000000200000100010000011000101001001000000100001000001000000010000001000200000101001010100000101200000201000000000100010010010010110010210001011000200000010110001101000000101000000001000000000310011001000100000000000000010100011201200011000200100010011001200000000000100100000001100100000000000000010000200011000211010000001110010010000001011001000011000200101000000200000001000010000210200010010011211001010010101011010200001010001001000000100001101010001201200000001201010000200011001001010201000001011011000000000010010011001010010000000001300200010000000011001000001010101101010000300001000200001000001210100200001111111110000010000000101101000100000000000010300000010001100000000010010100000011000111000200010010301100000000011000200001001000010011010200000010000111000101010010000200001000311001201000101011000011000100000000000000300010000000200000101010000000001200000000000100000001000200110210100100100010100110001000100000201210200101010000000000011011010310210201200001111011001000200000000000300010000300010000000100000100000100001000200010000100201010000100011010010000110011001010000001001010000001000000010000010000010100101100100000010000011210000101000001000000000000100000000000011110211100000300210210110000011000001000000001000001000200110001100201100001100001111100001000310000000200001000100110200000000000010100000311001000301000010000010110000000110001001110010011001001001101200001001000310000000100000000001000010001100000000000000000001210310000011000011200010000001101001301200111000000000000001210000000000001000001011001300201000011100001300011010000010000101000000110111201100200200010001001000000100000010210010000000001100001011110111100210000001011201000200001001000011000000000100000000101100010000001000100301000001010310010000110101200000100300100001101000011110000200000100000010001001000010001011011111001000110000100000010100201101110000001111200000000010000011011000000010000001100001200000000001200010011211011200000000100010011210001200101000011110101000000000100001001001101111201000010100211101001000201010000000010000000001101000111001001000000010000000200100010000100000000100001001000010000010000111100001100110000010001201000200011101100201100000001000000101000000000011100100010101000200010010111000201001210010000300210100001100000100101000000000111011201000001001311010010000210001210111001111000010300011001111000000000000001000001011000101001100110000010011000000010000000000001100100000100110010000000100210010010111001001200210010100001210000001001200000010200000211011100000100300010010210200110001000200010010001110101001310300001000000110100010110000100010001000201000000001000011010200000001100000010000101300001011100010000010100010301000000000010200010100000110000100200100000010001000011110001001000201000010000000000011100310101001000001000000001000000010100110010011001200000300010110200000001200000000000000200001101310010100011010010200200100000000100001000100200010000100100000010000000210010201000010011101000100001000000201000301000000000011000200001001101101200000001000010001001210110000010000110011300110001211200010210011000001010310001110211101011001010000010010010000010000000001000010000000010100000010210010201000001100000111000001301000000201011200101000101010300110000010001200110110101000011000000000011010000200100000000100000110001001001311000011001011010010001000001010001000101011100010100010000001000000010001011000000000101110001000000000000010300200100011011010200000000201010200010010301000001300100200001300100100100100001100210100001210110001010000001201000010000110000200010001001000000011000001100000001010000100001100200011011000011110010100010101000100001000000010000000000011001000200000000110200000000000000010210010000010000111200010100300301101000000000000300000010100000200310000000001001000000100110000010000300100200001110001010000000000101101000101100000200001000000100010010000011000000001011110011011010000000110000000201100010110010200000200110000001100100101110100010011000000310000001000000011210000010000000001301010110010210010001000011001000010001001100000100100010200000101310001010210001100100010011000011000000201300011010010000001000300000100000000001010000000000000010110010000110200011000100100010000010011011001001110300001000000210000000310010000000000011200100001000200001011000000011000000000110000211001000000001000000010010100011001100010101101000000000000100001000011001210001010000100001000101000001000001011010001000011000010001000100011000000001100011000111200001001000000100010010000001000011011211000001001000100000201010100200001101000001000000110000000200001000001000200000001101001010001000010101201300200000010000000000000210000100010000000101001000000101110001110201000010000201201000000001000000101000000000001001100011000211000110001000000300200000001001011001110100100000101001001000011000010010000010001011000000201000000010201010110200300001011300111210200100110011110000001000000001000000111001001000001200100000000000010010010110200000000000001010200001000001001100010100011010010011000001011001100201000001010100101010000000010000001010000010010011010301110001010011000000001110000200000000101000000000300001010000110000001000210010101200110101110011001001110000011000000001100000110000000000010010101010101001001100000100010010310000000311000000010000010000010000100000101101010001000000000010010200000000001000000001000111000011200001210100010100111011010000000001001000000111000000001101111000000010210200010000000000000210001010100001000000001001010000011000000000100010000000001000000001000000010201201000000000001100000100300010101000010110010000000001000001000111001000210010011010110000100301010000200210101100000000001000310100100201110001011000201201000010211001101000000110100010200100000301011000100000110300000100000210000001100000000211000001200200210111001000001001010010010110100211010000010000000001000001200200310210000101110101000311100001100000010001010001000100000000000000000000001000101100000100000100100110200001000001010000001100011001011010000111101101011000201310000000001100000000001000100010200011001211000010000001000000200010000010000201000000000000010000000100201000101010011000100010000200010200100100000000000001000000001201010000100000000110001200100100011010000001010000100011011000011000100000300000200001101010200010210310000210110210000000001200000010000000000000000000000011000000000010010200110300110211100000000200010110001110010000110000001201000010001000010110000010010010101001001000010100200000000100010000310000000010010000000010000001010101210000000310001000000001000010001310000101000200200000001001001100000311001001100010000010001000010001000110200000110000001010100100000000111000200010200010010010000000000100010010000201001000101000000000001001011210101110010001001100011010000000101001000211001001000100000000200300100000000000000100010201100000001001201011001000010000011000000100000010100000201000000000000200200210011010110110001300001010100001210001001000101100001200010010001301201000000000011000011000100100000001000000001000010011110100110001100001001110010001200211011010000001000001000010001010100000001001100210100100010100000000100001000000210301000001110010000000200001001010001000000011100010011201300000200100001100000000100110000000010200001200000000200011100201000000000000011200100201011000100201000000000100000000001000010010000010201100101001200010011100000000000000001000000001010000011010110210100010200010210010000001000211100001100001010010000111100011201101001200010201200010010011101000011301011101010110000211010001000100010100000100200010011000010001000001000300301210000000010100010000000011011000000010101011301000211010000100000101000010001110000010000110101000000201000110000000001001200000000310000000100000200310000000000111100210000000111000001011000000000000001010000000000000000010010010000000000111100010101000200200010010200000001010000100001000110300000001101301100000011000001000000110011010010000010000200100000000000000011010200000010200100010000210010311010000011001000001001001210210000200210100000100000000000001000200100200000200000011300000000000001010000010010100001010010000010001000000001000100000000010000111001310010010001210000110000000000201001000001001000000000000201200001000000000000000000000011001010001000010000001111000100011100011001001000110010100010000100000211010100100000000001000000000100001101010011001000000001100001001000210001000201000300210000200000111000110001000000010010000011100001011110110001000001000100001001000000000000000000111000100101000000000000000010000210010110000001110010000200310011010110010301010010200101100000001000010210000100010000000200000010001010110001010100000001210000001100000200000000000010010100100000010001100000010201000200000010200010000101000300000101311000000000000000000001311000000100000001100000001110100001011000001000000111010000200000010010010200001010011001000001210100010000001200110000000001110001011000200011001000000011000210301011010000110000000000100300000010100000010110000200010001001000001111101001110000100110010001000011001200011000210001000100001011000110001011011010100100010010000000301011011111001000001001011000000000301011110000001001200100300011000000100000210001001001200000000001010000000210001200000000000110000010110000110000000010001200010200001000000001000011100000100010010201311000000111000100200310000000000001001000201201001200000010000000010100010210000000010010011211101000000011010011000011200010010001001000000000001000100101100100100000210000100000100000011000010001100200010011000100000100101000100001000001110200110000101110010011011000001000011000010000000010201000001000200100100010000001000010000000000100200001101300010200001010201200301000000101000211211000211000000201100000000001110000000310011101000000000011000000011101001010100000010310000001100000111001300001101011000200100111000300000000000000000211110001011000110100111010101101000000001100010001010011010010310010000010000000010010010010000001100000010010010000010000110100111000010000000100001000000100000000000000110010000010010010301000000001111000200011010000210300000100101200100200000200200000010300200000000000210211001100010000000000010010200001001101200101010010210210200010110</script>
 
 <script>
-/* ==================================================================
-   SILNIK MIX3 v14 — wierny port mix3_v14_rules.py (zero-diff wobec
-   expected_calibration.json: 251 cykli, portfolio +28576 zł)
-   ================================================================== */
-const HITS  = new Set(['101','201','301']);
+/* SILNIK MIX3 v14 — zero-diff z mix3_v14_rules.py */
+const HITS = new Set(['101','201','301']);
 const STEPS = new Set(['100','200','300']);
 const K_LIMIT = 8;
 const T1_OFFSETS = [1,3,4,5,8,9];
@@ -229,797 +254,593 @@ const T2_OFFSETS = [2,5,6,7];
 const PNL_WIN  = {1:16,2:8,3:16,4:32,5:64,6:128,7:256,8:512};
 const PNL_LOSS = -1024;
 const K_STAKES = [8,8,16,32,64,128,256,512];
-const VERSION  = 'v14';
-const APP_VERSION = '1.0.0';
-
+const VERSION = 'v14', APP_VERSION = '1.1.0';
 const isHit  = c => HITS.has(c);
 const isStep = c => STEPS.has(c);
-const roleOf = c => isHit(c) ? 'HIT' : isStep(c) ? 'STEP' : 'SKIP';
 
-function toCode(v) {
-  if (v == null) return null;
-  const s = String(v).trim();
-  if (s === '') return null;
-  const n = parseFloat(s);
-  if (!isNaN(n)) return String(Math.trunc(n)).padStart(3, '0');
-  return s.padStart(3, '0');
+function toCode(v){if(v==null)return null;const s=String(v).trim();if(!s)return null;const n=parseFloat(s);if(!isNaN(n))return String(Math.trunc(n)).padStart(3,'0');return s.padStart(3,'0');}
+
+function buildMix3Cycles(codes){
+  const cyc=[]; let inC=false,aEr=null,kr=[],lastS=false;
+  for(let i=0;i<codes.length;i++){
+    const c=codes[i],er=i+1,h=isHit(c),s=isStep(c);
+    if(!h&&!s)continue;
+    if(!inC){if(h){inC=true;aEr=er;kr=[];lastS=false;}continue;}
+    if(s)lastS=true;
+    else{if(lastS){kr.push(er);lastS=false;}
+    else{cyc.push({anchor_er:aEr,win_er:er,M:kr.length+1,kroki_ers:kr.slice()});aEr=er;kr=[];lastS=false;}}
+  }
+  return cyc;
 }
 
-function buildMix3Cycles(codes) {
-  const cycles = [];
-  let inCycle = false, anchorEr = null, krokiErs = [], lastWasStep = false;
-  for (let i = 0; i < codes.length; i++) {
-    const c = codes[i], er = i + 1;
-    const h = isHit(c), s = isStep(c);
-    if (!h && !s) continue;
-    if (!inCycle) {
-      if (h) { inCycle = true; anchorEr = er; krokiErs = []; lastWasStep = false; }
-      continue;
-    }
-    if (s) { lastWasStep = true; }
-    else {
-      if (lastWasStep) { krokiErs.push(er); lastWasStep = false; }
-      else {
-        cycles.push({ anchor_er: anchorEr, win_er: er, M: krokiErs.length + 1, kroki_ers: krokiErs.slice() });
-        anchorEr = er; krokiErs = []; lastWasStep = false;
-      }
-    }
+function detectOpenCycle(codes,cyc){
+  let aEr;
+  if(cyc.length)aEr=cyc[cyc.length-1].win_er;
+  else{aEr=null;for(let i=0;i<codes.length;i++)if(isHit(codes[i])){aEr=i+1;break;}
+    if(aEr===null)return null;}
+  const kr=[];let ls=false;
+  for(let i=aEr;i<codes.length;i++){
+    if(isStep(codes[i]))ls=true;
+    else if(isHit(codes[i])){if(ls){kr.push(i+1);ls=false;}}
   }
-  return cycles;
+  return{anchor_er:aEr,kroki_ers:kr,win_er:null,M:null};
 }
 
-function detectOpenCycle(codes, cycles) {
-  let anchorEr;
-  if (cycles.length) anchorEr = cycles[cycles.length - 1].win_er;
-  else {
-    anchorEr = null;
-    for (let i = 0; i < codes.length; i++) if (isHit(codes[i])) { anchorEr = i + 1; break; }
-    if (anchorEr === null) return null;
+function computeOffsetStats(cyc,TM,offset){
+  let n=0,w=0,l=0,p=0;
+  for(let t=0;t<cyc.length;t++){
+    if(cyc[t].M!==TM)continue;
+    const gi=t+offset;if(gi>=cyc.length)continue;
+    const M=cyc[gi].M;n++;
+    if(M<=K_LIMIT){w++;p+=PNL_WIN[M];}else{l++;p+=PNL_LOSS;}
   }
-  const kroki = [];
-  let lastStep = false;
-  for (let i = anchorEr; i < codes.length; i++) {
-    const c = codes[i];
-    if (isStep(c)) lastStep = true;
-    else if (isHit(c)) { if (lastStep) { kroki.push(i + 1); lastStep = false; } }
-  }
-  return { anchor_er: anchorEr, kroki_ers: kroki, win_er: null, M: null };
+  return{n,wins:w,losses:l,pnl:p};
 }
 
-function computeOffsetStats(cycles, TM, offset) {
-  let n = 0, wins = 0, losses = 0, pnl = 0;
-  for (let tidx = 0; tidx < cycles.length; tidx++) {
-    if (cycles[tidx].M !== TM) continue;
-    const gi = tidx + offset;
-    if (gi >= cycles.length) continue;
-    const M = cycles[gi].M;
-    n++;
-    if (M <= K_LIMIT) { wins++; pnl += PNL_WIN[M]; }
-    else { losses++; pnl += PNL_LOSS; }
-  }
-  return { n, wins, losses, pnl };
-}
-
-// Zwraca listę aktywnych triggerów w otwartym cyklu — dla ekranu LIVE
-function activeTriggersLive(cycles, codes, openCycle) {
-  if (!openCycle) return [];
-  const openIdx = cycles.length;
-  const counter = { 1: 0, 2: 0 };
-  const active = [];
-  // liczba HITów w otwartym cyklu = active_k dla cyklu granego jeśli otwarty jest cyklem granym
-  let hitsInOpen = 1;
-  for (let i = openCycle.anchor_er; i < codes.length; i++) if (isHit(codes[i])) hitsInOpen++;
-
-  for (let tidx = 0; tidx < cycles.length; tidx++) {
-    const cyc = cycles[tidx];
-    if (cyc.M !== 1 && cyc.M !== 2) continue;
-    counter[cyc.M]++;
-    const TM = cyc.M;
-    const offsets = TM === 1 ? T1_OFFSETS : T2_OFFSETS;
-    for (const off of offsets) {
-      const gameIdx = tidx + off;
-      if (gameIdx === openIdx) {
-        active.push({
-          trigNo: counter[TM], TM, offset: off,
-          phase: 'GRA', activeK: hitsInOpen,
-          anchorEr: openCycle.anchor_er,
-          stake: hitsInOpen <= 8 ? K_STAKES[hitsInOpen - 1] : null,
-          nextStep: hitsInOpen <= 7 ? hitsInOpen + 1 : null
-        });
-      } else if (gameIdx > openIdx) {
-        // sprawdź czy któryś prep=J trafia w openIdx
-        for (let J = 1; J < off; J++) {
-          if (tidx + J === openIdx) {
-            active.push({
-              trigNo: counter[TM], TM, offset: off,
-              phase: `PREP J=${J}`, activeK: hitsInOpen,
-              anchorEr: openCycle.anchor_er,
-              stake: null, nextStep: null
-            });
-            break;
-          }
+function buildColumnLabels(TM,offset,cyc,codes,oc){
+  const out=new Map();
+  const add=(er,lbl,kind)=>{const a=out.get(er)||[];a.push({label:lbl,kind});out.set(er,a);};
+  let trigNo=0;const N=codes.length;
+  const oneT=(tidx)=>{
+    trigNo++;
+    const twe=cyc[tidx].win_er;
+    if(offset===1) add(twe,`▶ TRIGGER #${trigNo} T:${TM} !!START GRY!! Krok Gry 1/8`,'start_gry');
+    else add(twe,`▶ TRIGGER #${trigNo} T:${TM} offset 1 Krok 1`,'trigger');
+    for(let J=1;J<offset;J++){
+      const tI=tidx+J;
+      if(tI<cyc.length){
+        const c=cyc[tI],a=c.anchor_er,w=c.win_er,M=c.M;let ak=1,pr='HIT';
+        for(let er=a+1;er<w;er++){
+          const co=codes[er-1];
+          if(isHit(co)){ak++;add(er,`offset ${J} k${ak}`,'offset_hit');pr='HIT';}
+          else if(isStep(co)){if(pr==='HIT')add(er,`offset ${J} k${ak} niezamkn.`,'offset_step');pr='STEP';}
         }
+        if(J<offset-1) add(w,`offset ${J} zamkn. K${M} / offset ${J+1} k1`,'offset_close');
+        else add(w,`offset ${J} zamkn. K${M} / OFFSET ${J+1} START GRY k1/8`,'start_gry');
+        continue;
+      }
+      if(tI===cyc.length&&oc){
+        const a=oc.anchor_er;let ak=1,pr='HIT';
+        for(let er=a+1;er<=N;er++){
+          const co=codes[er-1];
+          if(isHit(co)){ak++;add(er,`[LIVE] offset ${J} k${ak}`,'offset_hit');pr='HIT';}
+          else if(isStep(co)){if(pr==='HIT')add(er,`[LIVE] offset ${J} k${ak} niezamkn.`,'offset_step');pr='STEP';}
+        }
+        return;
+      }
+      return;
+    }
+    const gi=tidx+offset;
+    if(gi<cyc.length){
+      const g=cyc[gi],ga=g.anchor_er,gw=g.win_er,gM=g.M;let ak=1,pr='HIT';
+      for(let er=ga+1;er<gw;er++){
+        const co=codes[er-1];
+        if(isHit(co)){ak++;add(er,ak<=8?`Krok Gry ${ak}/8`:`poza k8 (M=${gM})`,'game_hit');pr='HIT';}
+        else if(isStep(co)){if(pr==='HIT')add(er,`k${Math.min(ak,8)}/8 niezamkn.`,'game_step');pr='STEP';}
+      }
+      if(gM<=K_LIMIT) add(gw,`WIN K:${gM} (+${PNL_WIN[gM]} zł)`,'win_result');
+      else add(gw,`LOSS K:8 (M=${gM})`,'loss_result');
+      return;
+    }
+    if(gi===cyc.length&&oc){
+      const ga=oc.anchor_er;let ak=1,pr='HIT';
+      for(let er=ga+1;er<=N;er++){
+        const co=codes[er-1];
+        if(isHit(co)){ak++;add(er,ak<=8?`[LIVE] Krok Gry ${ak}/8`:`[LIVE] poza k8`,'game_hit');pr='HIT';}
+        else if(isStep(co)){if(pr==='HIT')add(er,`[LIVE] k${Math.min(ak,8)}/8 niezamkn.`,'game_step');pr='STEP';}
       }
     }
-  }
-  return active;
+  };
+  for(let t=0;t<cyc.length;t++) if(cyc[t].M===TM) oneT(t);
+  return out;
 }
 
-// MD5 — potrzebne do frozen_hash (zgodność z Python)
 function md5(str){
-  function toHex(n){var s="",j;for(j=0;j<4;j++)s+=("0"+((n>>(j*8))&0xff).toString(16)).slice(-2);return s;}
-  function add32(a,b){return (a+b)&0xffffffff;}
-  function cmn(q,a,b,x,s,t){a=add32(add32(a,q),add32(x,t));return add32((a<<s)|(a>>>(32-s)),b);}
-  function ff(a,b,c,d,x,s,t){return cmn((b&c)|((~b)&d),a,b,x,s,t);}
-  function gg(a,b,c,d,x,s,t){return cmn((b&d)|(c&(~d)),a,b,x,s,t);}
-  function hh(a,b,c,d,x,s,t){return cmn(b^c^d,a,b,x,s,t);}
-  function ii(a,b,c,d,x,s,t){return cmn(c^(b|(~d)),a,b,x,s,t);}
-  function md5blk(s){var m=[],i;for(i=0;i<64;i+=4)m[i>>2]=s.charCodeAt(i)+(s.charCodeAt(i+1)<<8)+(s.charCodeAt(i+2)<<16)+(s.charCodeAt(i+3)<<24);return m;}
-  function md5cycle(x,k){
-    var a=x[0],b=x[1],c=x[2],d=x[3];
-    a=ff(a,b,c,d,k[0],7,-680876936);d=ff(d,a,b,c,k[1],12,-389564586);c=ff(c,d,a,b,k[2],17,606105819);b=ff(b,c,d,a,k[3],22,-1044525330);
-    a=ff(a,b,c,d,k[4],7,-176418897);d=ff(d,a,b,c,k[5],12,1200080426);c=ff(c,d,a,b,k[6],17,-1473231341);b=ff(b,c,d,a,k[7],22,-45705983);
-    a=ff(a,b,c,d,k[8],7,1770035416);d=ff(d,a,b,c,k[9],12,-1958414417);c=ff(c,d,a,b,k[10],17,-42063);b=ff(b,c,d,a,k[11],22,-1990404162);
-    a=ff(a,b,c,d,k[12],7,1804603682);d=ff(d,a,b,c,k[13],12,-40341101);c=ff(c,d,a,b,k[14],17,-1502002290);b=ff(b,c,d,a,k[15],22,1236535329);
-    a=gg(a,b,c,d,k[1],5,-165796510);d=gg(d,a,b,c,k[6],9,-1069501632);c=gg(c,d,a,b,k[11],14,643717713);b=gg(b,c,d,a,k[0],20,-373897302);
-    a=gg(a,b,c,d,k[5],5,-701558691);d=gg(d,a,b,c,k[10],9,38016083);c=gg(c,d,a,b,k[15],14,-660478335);b=gg(b,c,d,a,k[4],20,-405537848);
-    a=gg(a,b,c,d,k[9],5,568446438);d=gg(d,a,b,c,k[14],9,-1019803690);c=gg(c,d,a,b,k[3],14,-187363961);b=gg(b,c,d,a,k[8],20,1163531501);
-    a=gg(a,b,c,d,k[13],5,-1444681467);d=gg(d,a,b,c,k[2],9,-51403784);c=gg(c,d,a,b,k[7],14,1735328473);b=gg(b,c,d,a,k[12],20,-1926607734);
-    a=hh(a,b,c,d,k[5],4,-378558);d=hh(d,a,b,c,k[8],11,-2022574463);c=hh(c,d,a,b,k[11],16,1839030562);b=hh(b,c,d,a,k[14],23,-35309556);
-    a=hh(a,b,c,d,k[1],4,-1530992060);d=hh(d,a,b,c,k[4],11,1272893353);c=hh(c,d,a,b,k[7],16,-155497632);b=hh(b,c,d,a,k[10],23,-1094730640);
-    a=hh(a,b,c,d,k[13],4,681279174);d=hh(d,a,b,c,k[0],11,-358537222);c=hh(c,d,a,b,k[3],16,-722521979);b=hh(b,c,d,a,k[6],23,76029189);
-    a=hh(a,b,c,d,k[9],4,-640364487);d=hh(d,a,b,c,k[12],11,-421815835);c=hh(c,d,a,b,k[15],16,530742520);b=hh(b,c,d,a,k[2],23,-995338651);
-    a=ii(a,b,c,d,k[0],6,-198630844);d=ii(d,a,b,c,k[7],10,1126891415);c=ii(c,d,a,b,k[14],15,-1416354905);b=ii(b,c,d,a,k[5],21,-57434055);
-    a=ii(a,b,c,d,k[12],6,1700485571);d=ii(d,a,b,c,k[3],10,-1894986606);c=ii(c,d,a,b,k[10],15,-1051523);b=ii(b,c,d,a,k[1],21,-2054922799);
-    a=ii(a,b,c,d,k[8],6,1873313359);d=ii(d,a,b,c,k[15],10,-30611744);c=ii(c,d,a,b,k[6],15,-1560198380);b=ii(b,c,d,a,k[13],21,1309151649);
-    a=ii(a,b,c,d,k[4],6,-145523070);d=ii(d,a,b,c,k[11],10,-1120210379);c=ii(c,d,a,b,k[2],15,718787259);b=ii(b,c,d,a,k[9],21,-343485551);
-    x[0]=add32(a,x[0]);x[1]=add32(b,x[1]);x[2]=add32(c,x[2]);x[3]=add32(d,x[3]);
-  }
-  function md51(s){var n=s.length,state=[1732584193,-271733879,-1732584194,271733878],i;
-    for(i=64;i<=s.length;i+=64) md5cycle(state, md5blk(s.substring(i-64,i)));
-    s=s.substring(i-64);var tail=new Array(16).fill(0);
-    for(i=0;i<s.length;i++) tail[i>>2]|=s.charCodeAt(i)<<((i%4)<<3);
-    tail[i>>2]|=0x80<<((i%4)<<3);
-    if(i>55){md5cycle(state,tail);tail=new Array(16).fill(0);}
-    tail[14]=n*8; md5cycle(state,tail); return state;}
-  var s=md51(str);return toHex(s[0])+toHex(s[1])+toHex(s[2])+toHex(s[3]);
+  function T(n){var s="",j;for(j=0;j<4;j++)s+=("0"+((n>>(j*8))&0xff).toString(16)).slice(-2);return s;}
+  function A(a,b){return(a+b)&0xffffffff;}
+  function C(q,a,b,x,s,t){a=A(A(a,q),A(x,t));return A((a<<s)|(a>>>(32-s)),b);}
+  function F(a,b,c,d,x,s,t){return C((b&c)|((~b)&d),a,b,x,s,t);}
+  function G(a,b,c,d,x,s,t){return C((b&d)|(c&(~d)),a,b,x,s,t);}
+  function H(a,b,c,d,x,s,t){return C(b^c^d,a,b,x,s,t);}
+  function I(a,b,c,d,x,s,t){return C(c^(b|(~d)),a,b,x,s,t);}
+  function blk(s){var m=[],i;for(i=0;i<64;i+=4)m[i>>2]=s.charCodeAt(i)+(s.charCodeAt(i+1)<<8)+(s.charCodeAt(i+2)<<16)+(s.charCodeAt(i+3)<<24);return m;}
+  function cyc(x,k){var a=x[0],b=x[1],c=x[2],d=x[3];
+    a=F(a,b,c,d,k[0],7,-680876936);d=F(d,a,b,c,k[1],12,-389564586);c=F(c,d,a,b,k[2],17,606105819);b=F(b,c,d,a,k[3],22,-1044525330);
+    a=F(a,b,c,d,k[4],7,-176418897);d=F(d,a,b,c,k[5],12,1200080426);c=F(c,d,a,b,k[6],17,-1473231341);b=F(b,c,d,a,k[7],22,-45705983);
+    a=F(a,b,c,d,k[8],7,1770035416);d=F(d,a,b,c,k[9],12,-1958414417);c=F(c,d,a,b,k[10],17,-42063);b=F(b,c,d,a,k[11],22,-1990404162);
+    a=F(a,b,c,d,k[12],7,1804603682);d=F(d,a,b,c,k[13],12,-40341101);c=F(c,d,a,b,k[14],17,-1502002290);b=F(b,c,d,a,k[15],22,1236535329);
+    a=G(a,b,c,d,k[1],5,-165796510);d=G(d,a,b,c,k[6],9,-1069501632);c=G(c,d,a,b,k[11],14,643717713);b=G(b,c,d,a,k[0],20,-373897302);
+    a=G(a,b,c,d,k[5],5,-701558691);d=G(d,a,b,c,k[10],9,38016083);c=G(c,d,a,b,k[15],14,-660478335);b=G(b,c,d,a,k[4],20,-405537848);
+    a=G(a,b,c,d,k[9],5,568446438);d=G(d,a,b,c,k[14],9,-1019803690);c=G(c,d,a,b,k[3],14,-187363961);b=G(b,c,d,a,k[8],20,1163531501);
+    a=G(a,b,c,d,k[13],5,-1444681467);d=G(d,a,b,c,k[2],9,-51403784);c=G(c,d,a,b,k[7],14,1735328473);b=G(b,c,d,a,k[12],20,-1926607734);
+    a=H(a,b,c,d,k[5],4,-378558);d=H(d,a,b,c,k[8],11,-2022574463);c=H(c,d,a,b,k[11],16,1839030562);b=H(b,c,d,a,k[14],23,-35309556);
+    a=H(a,b,c,d,k[1],4,-1530992060);d=H(d,a,b,c,k[4],11,1272893353);c=H(c,d,a,b,k[7],16,-155497632);b=H(b,c,d,a,k[10],23,-1094730640);
+    a=H(a,b,c,d,k[13],4,681279174);d=H(d,a,b,c,k[0],11,-358537222);c=H(c,d,a,b,k[3],16,-722521979);b=H(b,c,d,a,k[6],23,76029189);
+    a=H(a,b,c,d,k[9],4,-640364487);d=H(d,a,b,c,k[12],11,-421815835);c=H(c,d,a,b,k[15],16,530742520);b=H(b,c,d,a,k[2],23,-995338651);
+    a=I(a,b,c,d,k[0],6,-198630844);d=I(d,a,b,c,k[7],10,1126891415);c=I(c,d,a,b,k[14],15,-1416354905);b=I(b,c,d,a,k[5],21,-57434055);
+    a=I(a,b,c,d,k[12],6,1700485571);d=I(d,a,b,c,k[3],10,-1894986606);c=I(c,d,a,b,k[10],15,-1051523);b=I(b,c,d,a,k[1],21,-2054922799);
+    a=I(a,b,c,d,k[8],6,1873313359);d=I(d,a,b,c,k[15],10,-30611744);c=I(c,d,a,b,k[6],15,-1560198380);b=I(b,c,d,a,k[13],21,1309151649);
+    a=I(a,b,c,d,k[4],6,-145523070);d=I(d,a,b,c,k[11],10,-1120210379);c=I(c,d,a,b,k[2],15,718787259);b=I(b,c,d,a,k[9],21,-343485551);
+    x[0]=A(a,x[0]);x[1]=A(b,x[1]);x[2]=A(c,x[2]);x[3]=A(d,x[3]);}
+  function m51(s){var n=s.length,st=[1732584193,-271733879,-1732584194,271733878],i;
+    for(i=64;i<=s.length;i+=64) cyc(st, blk(s.substring(i-64,i)));
+    s=s.substring(i-64);var tl=new Array(16).fill(0);
+    for(i=0;i<s.length;i++) tl[i>>2]|=s.charCodeAt(i)<<((i%4)<<3);
+    tl[i>>2]|=0x80<<((i%4)<<3);
+    if(i>55){cyc(st,tl);tl=new Array(16).fill(0);}
+    tl[14]=n*8; cyc(st,tl); return st;}
+  var s=m51(str);return T(s[0])+T(s[1])+T(s[2])+T(s[3]);
 }
 const frozenHash = codes => md5(codes.map(c => c || '').join('|'));
 
-/* ==================================================================
-   STAN APLIKACJI + PERSISTENCE (localStorage, klucze versioned)
-   ================================================================== */
-const LS_CODES    = 'mix3_v14_codes';
-const LS_SESSIONS = 'mix3_v14_sessions';
-const LS_SESSION_START = 'mix3_v14_session_start_n';
-const LS_PREFS    = 'mix3_v14_prefs';
-const LS_SEEDED   = 'mix3_v14_seeded';
-const LS_TAB      = 'mix3_v14_tab';
-const LS_HISTFILT = 'mix3_v14_histfilt';
-
-const State = {
-  codes: [],           // string[] – kody 3-znakowe
-  cycles: [],
-  openCycle: null,
-  sessions: [],        // {started_at, n_codes_before, pnl}
-  sessionStartN: 0,    // ile kodów było na starcie tej sesji
-  sessionPnl: 0,       // policzone: portfolio_PnL(now) - portfolio_PnL(session_start)
-  tab: 'live',
-  histFilter: 'all',
-  pendingCode: '',     // aktualny wpisywany kod (0..3 cyfr)
-  lastEvents: [],      // ostatnie eventy (WIN, LOSS, TRIG) do notyfikacji
-  seeded: false
-};
-
-function saveCodes() {
-  // kompresja: jedna string, 3 znaki/kod
-  localStorage.setItem(LS_CODES, State.codes.join(''));
-}
-function loadCodes() {
-  const raw = localStorage.getItem(LS_CODES);
-  if (!raw) return [];
-  const out = [];
-  for (let i = 0; i + 3 <= raw.length; i += 3) out.push(raw.substr(i, 3));
-  return out;
-}
-function saveSessions() { localStorage.setItem(LS_SESSIONS, JSON.stringify(State.sessions)); }
-function loadSessions() { try { return JSON.parse(localStorage.getItem(LS_SESSIONS) || '[]'); } catch { return []; } }
-
-function loadPrefs() {
-  try { return JSON.parse(localStorage.getItem(LS_PREFS) || '{}'); } catch { return {}; }
-}
-function savePrefs(p) { localStorage.setItem(LS_PREFS, JSON.stringify(p)); }
-
-function computePortfolioPnl(cycles, upToTidx = null) {
-  // suma PnL po wszystkich (TM, off) — tylko dla cykli granych które się zamknęły
-  let total = 0;
-  const upper = upToTidx == null ? cycles.length : upToTidx;
-  for (let tidx = 0; tidx < upper; tidx++) {
-    const cyc = cycles[tidx];
-    if (cyc.M !== 1 && cyc.M !== 2) continue;
-    const offsets = cyc.M === 1 ? T1_OFFSETS : T2_OFFSETS;
-    for (const off of offsets) {
-      const gi = tidx + off;
-      if (gi >= cycles.length) continue;
-      const M = cycles[gi].M;
-      if (M <= K_LIMIT) total += PNL_WIN[M];
-      else total += PNL_LOSS;
-    }
+function computeLastSafeEr(cyc, nCodes) {
+  const mT1=Math.max(...T1_OFFSETS), mT2=Math.max(...T2_OFFSETS);
+  let e = nCodes + 1;
+  for (let t = 0; t < cyc.length; t++) {
+    const c = cyc[t];
+    if (c.M !== 1 && c.M !== 2) continue;
+    const mo = c.M === 1 ? mT1 : mT2;
+    if (t + mo >= cyc.length) e = Math.min(e, c.win_er);
   }
-  return total;
+  if (e > nCodes) { const m = 12; e = cyc.length > m ? cyc[cyc.length - m].win_er : 1; }
+  return Math.max(1, e);
+}
+
+/* STAN */
+const LS_CODES = 'mix3_v14_codes', LS_SESSION = 'mix3_v14_session', LS_MODEL = 'mix3_v14_model',
+      LS_FILT = 'mix3_v14_filt', LS_SEEDED = 'mix3_v14_seeded', LS_TAB = 'mix3_v14_tab',
+      LS_THEME = 'mix3_v14_theme';
+
+const MODELS = [
+  ...T1_OFFSETS.map(o => ({ TM: 1, off: o, key: `T1+${o}` })),
+  ...T2_OFFSETS.map(o => ({ TM: 2, off: o, key: `T2+${o}` }))
+];
+
+const State = { codes: [], cycles: [], openCycle: null, sessionStartN: 0,
+  model: 'T1+1', tab: 'T1', onlyEvents: false, showLast: 500 };
+
+const encode = arr => arr.join('');
+const decode = s => { const o = []; for (let i = 0; i + 3 <= s.length; i += 3) o.push(s.substr(i, 3)); return o; };
+function save(){ localStorage.setItem(LS_CODES, encode(State.codes)); }
+function load(){ const r = localStorage.getItem(LS_CODES); return r ? decode(r) : []; }
+
+function trySeed() {
+  if (localStorage.getItem(LS_SEEDED)) return;
+  const raw = document.getElementById('seed').textContent.trim();
+  if (!raw || raw.length < 300 || raw.length % 3 !== 0) return;
+  State.codes = decode(raw);
+  State.sessionStartN = State.codes.length;
+  save();
+  localStorage.setItem(LS_SESSION, String(State.sessionStartN));
+  localStorage.setItem(LS_SEEDED, '1');
 }
 
 function recompute() {
   State.cycles = buildMix3Cycles(State.codes);
   State.openCycle = detectOpenCycle(State.codes, State.cycles);
-  // session PnL — różnica portfolio od N startu
-  // musimy policzyć portfolio na podstawie tylko cykli-triggerów o tidx dla których kod triggera > sessionStartN
-  const totalPnl = computePortfolioPnl(State.cycles);
-  const startPnl = computeSessionStartPnl();
-  State.sessionPnl = totalPnl - startPnl;
 }
 
-// zapamiętany portfolio PnL w momencie startu sesji (bez ryzyka drift)
-let _cachedSessionStartPnl = null;
-let _cachedSessionStartN = null;
-function computeSessionStartPnl() {
-  if (_cachedSessionStartN === State.sessionStartN && _cachedSessionStartPnl !== null) return _cachedSessionStartPnl;
-  // policz PnL na prefiksie codes[0..sessionStartN]
-  const prefix = State.codes.slice(0, State.sessionStartN);
-  const prefCycles = buildMix3Cycles(prefix);
-  _cachedSessionStartPnl = computePortfolioPnl(prefCycles);
-  _cachedSessionStartN = State.sessionStartN;
-  return _cachedSessionStartPnl;
-}
-function invalidateSessionCache() { _cachedSessionStartPnl = null; }
-
-/* ==================================================================
-   SEED
-   ================================================================== */
-function trySeed() {
-  if (localStorage.getItem(LS_SEEDED)) return;
-  const raw = document.getElementById('seed').textContent.trim();
-  if (!raw || raw === '001000000010200010001010011100001111201000000200001210000211000210010000011200100001000011011000000000000000010100000000010001001101001000101010001010001000010010001000000000000000010011000010000000110010001300010200000010000001110000100000000300000001001000011300000301010100000000000001000001010000010001001000101000010001210010100001010001001000001010000011001201110101201000211010110001011010000000200200011000000000000011000010001200000010000111000000200000001000010010100010301010001001000100010010010200000000000000000011100000000201000311000010101100000000000201101111000000110211001000200100001000300001001011010000201210000110010001010000000000000000200201010000201110100010001000001001000000000011000301101001010000011110010000000100000010000101200200300200000201000000200000000000010010201010001101101000100210000000010000001000100200200000001010000000001000001100000101100001000101201310100010000010110001001001010100000001001000000000201011000100101210010201000000000200001000000001100101200001001100001100100110010000010000010000010000010001200001000200000010310001000010001000010001011011000200110000200000000200001001000001010000011000000000011001210001100001110010110001010000210000101000010010000110001201010000000101001000010200000011110000010000100100000210200010001011001201001100200110000001001100000000000200000101000100100100010000100010000001000001001100001010111200300001000110000200000001200011000210001000000010210011100001110000000010000001011010001100001000011010200010101010210001300100000100200000110000001001200101211000000000000000001001001000000001001201200100010101000101000000000000011100010000000010001000010000100001001211110000101000101201000000001010100010000000010001010000000101000201000100100000011000010001000100110000000000000000000000101001001000000000000100200010010011210011010000000011010011001000000000010000000000311200000000010001010010000000100000210011101000300000000001010200000000301200000000000001000301011001200010000200200011100010001000000001201000001210000001001001000001000200000000010001000201011000000000000001000200110000000001010200000000101000000001000011001010001100001201000000000000000101010010210000000000011010001000201000100010010000000011310010010201001010010000010201000000000000201001101211110000000101001000000001000100000000001000000000000200001201010000011111100100101001000000011001001101010001000001000001000100200000001010000300010000000000110001001100001001000001010000010011200000011000000001000201300000000001001000100010100000101100001010311100010010010100001301100000011011010000100101000311100100000010000000110000210010010000000200000010010200200001100000001100200010010100200011300211011001000011000211000010111011001000001100100010010000100000000000201201000100000101100000000010000001000001000001000000001001000010000001001000000200101001000000000001000011001000010000200111310300200000101010000100011200010000010010000010110201000000000000000100100001010010011001000200000001101011010000000010011000011310200000000100010010000100001100300201010101000001001000101000010211010201000000300000100200010001000010000101201001000001001001010000000111100010100010010000000010011010000100001011001200001010101000000001100001000000001100010100000011210011100201000001100210101000010000000000000010000000000000110001000000001000001000001000100000000000000010010100110001310010000100100000100000001101100000011001100010200000011200000000010010110000200010010000110110110000010010000310000000301010211011101001110001100000011001000211000000000210010000010000101000000000000201001000000200200010111100010000200001001000010111000001210000011000000000011000101000201001101111000001000100200000110011010000011000011100000210000001100110200000011001310000000001010111100100110000001111011000100010000000010000000100000000000011010000010100010000010000010100300010110001000301000000000001000000200010001100000000111000000110010001310200011000010001000001111000000201010000100300000001000100000210200101000001101010210100011001000000011101000001000001000000001000001100000000011010000001000210000110000101000101000000010101100000000000011010000100000000001011001010000000100010001000000100200100211100011001000001001011000001010010000201000210000100200000000101201010100310000001000010010000210011000000000110010000100000000111000000200111001001000101000000010110011300200000110200110000000000200000101000000210100010010010000001010000000100010001000001010000000010000000000100200000211000001010001000000010000001110011000010100010001010010001200000000301001010200000011200001001010000100000200210010100301000000001100000000201010010000001010100010100201101001000001010100000100010001000000101110000210000100101011010001010300000001200001001000000101001000010000000000010010001200010010200010000010110000100111000000000200001010010111010100000310000000010000010210001000000001001001000100011100111000100000000000110201000010100000000200000010000001001211310201001010000011001000000101000000010000201000010000201100001200000011010110100000000000100000000100000000010000101000000000000100000210000000000100001101010111000000010100000000200010101000000000011001101010000200010001000300001010000010010000200001101000010010000110010011000001000011010000000000000001000000000100100010000101010000000000000000000100101101100201001000010000100210000100000000000000000010010200000100001000000010010011010000110000100201000010000001011010100000000100000311000000001001011001010001111000000000000000001010100101000101000100001010100000000111000000010000111200010000001000010000110100010110010101000000000000201001200001000100000010000200001110001011000000100001000110000000000211100001000001010010010001011000000000200111000100000000001000000011000001001000000000100000011200000000010000000001011001001000001100010010010000010100101000001000011001001110111100100101210200000001100100000000000010000000011011000000001200010000201001111211000000010011000000011000210000000000000000010001001210201100010000010000110101100000110000000201000201210000210010000001000100010001000110201000000010100001000000000011001010200200001101001011210000201010000010010000011300000300000200001001310200210200110001010310000000010200110010000100010110001110001000001011000301000011011001110001100000100010010101000000201000000010000300101000100200000110001000000000000001001010100010100000100010000101000001000000201001010010000100000000100000010100200100100010000000001010000000001000001010001010001000010101210000010100200300101000000000210000101000010000100000001000211100001011000010000100000000110001000000001101001001001000010000001001001001010000010000100111200001000000111000000000001000100010000011101111000000110000010010000000000000010200100000000010000011000000000010100000000001000000000000001000011000101010011200010001010310000100000210010000000000000000000001000000010000200010010001010001000100210000001100010300010000301200300000100210000000010001000010000000000010100011001201201100000000100010010310011001201000100010000001000001000010000000200100001200011000000001001201010000000001100010001000000000000011000311000000000200110000011110011200100000000310001100000000300010010110300000000001001100000000010010000010001001000000001000000100001000000010010100100001010000000010000300010000010200300100301011200001000000000201100001000000010001001000000000001000110010001001000000100000000001010000110000000101000000000000000310010011000010000111011001000100101000110000010000001001300001000000010011010001000000010001001011000000001000000010200001010011000000001001000000110000010000000011000300100000000101100210011000001210000011000110210000200000201011200101000001000210001011000000001100001201001201200001101001100001200001100000000000001000000000001000000001010011000201010000001000101310010000010001111000000000011201110010010000001100100000000011000010000011000000000000001200101101010000000210100001200110100210000111210000010200101000001001100100000000000101000100000000000000000000000210000001010200000001000010010000000000001000010100000100010000000010010000010200000000111200000010100000000000100210001100001001010001010000001010000001010010001001000010001000101311000000200100000000010001000000000100210100010200000010100200000010001201200001001001011000010000000210001110000000201010000110100001001101010300000000001001000000101011200000000000100000000011111001010011010010011210000010000001100000000100200000110011001010110001000000000010001100001010100011110010200000100010201001000001100000000000100000111010000100110001100000000001000100000000010200010010100000010100000010000201210000001201001301200010000101211010001000000000000100001000200000200110201000100000001000010010000000200011110100000010001210010111000001001010200000011200001000000010001001000200110001010110001001000010000010011000000011100000011001001310010100000011000110000000000010010111000010100010000001000000101011000011000011010101110101100100001010211000000010000010011010210000000200010000000001200000000000101001001000000000201200001101000211010300000200000000010000001300010010010000100010001010100200101001201000001100010300111100010000000000000100200000000000000110000000100010001200100110201010000011010001000000010010000001011010010000000100000000001001000000000000000210000000000000110201001010000010000000000010000100000010001100010000001000010200000110200000110210000011000001001100010000000001000000000010000010110000000001001010210000010011000010000310000111000000010001001000100000001010011011010100100010001300110000110010100200000000200001000000300000010010001001100100000100100000010301000001000000101300000000010000011110000000000000001210000010210000000011000011000001000001000011001010000000001100000200001001010111000111001000000000311010301101000000110000000100000200010010000001100000100000110200210201000100100001000210011211111001110000000200000101111000100111001000000011000100100000100101300000010100001100011000001010000010001001000010000100100000000000001010010101300000100200200011010200000001200100100111010000011010001000001001100000200000001000000000311000010010110001010001000000011001001001000010000010200000301110010000000110100200000210010000011010001100111001101100000001000001011000101210000001001001111001000000000010301001100010010001001010011100000200000000010010000000100010200000301000001001001001010000010001011110100000001310000110211000000000000200000101000100000010001000100010000010110010000211000211110000200100300000000100010000000111011001000000000000211001001011000000011010010011200100001200000001010100010111010200011100000000000010001001101011200001000000100100010000101201001001000001001300010000000010000210101001000200000100011211100300001011201001000200000000100000200000110000001300111000010110001100001100000200000210310010000010001000110110110000010101001000010000001300310000000100001000000000110310000000200000000300000010010010100000010000000000000011000001100110010200001000001010100100011000201010000001200001101010011300000010000000000000000000210011000201000200100100011200201000000010010100000000000000001010000100010111000000001000010301000010000300001000001000101000301201011000000000101110001001000100000010110100201000200000110000010000000000000200100100001000101011300111000000000000210000010000100200000001000000000000100100001000300000000000201100001000011000000200000200200111010101000001000010011101010000300200010100011111010010000201000010010000000311001100010111000011000000300110011000000001000000001200200000201210010110000000000000000011000201000200010001000000001000010000000000311101000110110000200001110101011011001001000010010001200110010001100000100010200010010010100101000000201000000001000100001211101011000100000101000100010001200010000000111000000011200000001010000001011100000100010001010111000200000000001001000201111010000001001000201100100201010010000000210011000210001001010010100000010001001000000301000000211100201110000000010110010010201010001000101000001100300211210000200010001000000010010100001010001101010000001001010110000000200000000001000100001001001310000000000000010000001000001201001001000001000000000301200000100010000100011100100001010000010200010101011000010100101001201000001000010000001110100000001000010000100000001100010001101011001000000010101000000210000000001000000010100200000001001000300200000000000210001000001010000001000000110101000001111011000010101000211010000201000000210000000010010100000010000100110110000000000301000011010001010010000000001000000211100010000100000100100001000011000000100000000000000000000001110000110010001100000100000000010010001011000000010000000000111001111201001100000000000210010100010010100100000001000000000100201200000001000001200210000000300201000000010000001000000000000000011000010011010111000000010010210000211101000000011000111000000200210010001000010000000000010000000000210001000000200001200000000111001010001011210200010011200010000001200100301001101000101000000001000111011101000310010000000201200001000000100000000301111010010010000000010000100100300000000200000000100000010100000000210100000001010300000211000210001211100110000000001000000100010000100000000000000000000001000001000010101000001001200001001100201001201110011001200000200000000000000000010201200000000000101010000200001000000010100010210100001201010011010000000010110000000001110010000100000100011000010111001201000000000001000010001001010200000000100000011001110011010011000000101210110000000301010201001000010000001000111000001001100101010100000010000010100001000000000010000000000000010000200001101000000010001000000001000001000011000100001000210200211000000010011001000000000001100000000000000010000100000100000011011010000110011000001001000000001000110100100000010000001110000010110301211000211001100000001000001001001001000110211100200000000110000000110000000000000301000000000100200000001111001210100010010000000001100000000010010000110100100000000011010000201100000301000010200000000110000101001000000010001110001000011000101001000000000000000200011110000001000000001010011000010000010010000010000200101000000000101110110010001011000200001211010201001010000000010010001000000000010010100000000000000000000100200110000200100011010200300010310000010001100100000000101000001000000210000000000200011000001111000100110000000000211200100200010010000000001011011011100101201000010310200010100111011010100100001300200001200000010001000100111101200110000000001001010000101001001000000000000000001000100001010010000000000100000210010110011210000001010010101000010010000010000200000000011100001010000200000111101010000200011000000000200001001000000310000000000000000110200000310000001000110000001011000210001111000100000001010001000000200010110000100110201011310011000001000010010001100211301110011000000200000110000311300000000000010200000010111001000010010000001001000000000101001001000000201000000000000000000000010001010101011000201000011010201001100010000010010010000100101010010211100010001011200211310001101000000010101000001211010001000000101100010000111001010300001101200210000000100010201010001100010000000000011100010000000010000000000010200201000000000000001300101001000010010000000110000000001100000000100001000000201110000000001301000301000000000000000001010210000000001001000000101000010000100011000200010010000000001100000200211001010011210000101010000000101300000001000000000000200100000000000000001110100110001011010100111000000000001111200000010000000000001000111200001000100100010100001000000011010201110000001001100000011000210010000001301100000100000111001000000000001110010000101011100010000000000200000000200010110010010000110001000000110001001100011010110010001201000010100000210000011100000010001001000101000001000011110201201101101000000001000010001000100000210000200000000110000000001300000301001100200000000000000000110001010300001000001201001000010001010000210011010000010011000000000001000010010200210010001000000200000200000201100100010010000001001000000001001211000000000000000010010000000001000000001001000001000001010011200000010010200110200101011011010110001100000000010001011000000210000011010111101001310100110000011000000010000200111200000000001010100201200110011201000211000000010011000101010100010000111300001000000000001201110000000001101010011000000110000000000200000010000110210200000001000001200100010200000100000000010101100001010001000001000101000100001010201000000000100000010011110000110010000100000000100010001100100101000000010000111000111011000000100001010001100000111100000011011100000000101010200000001001000111101201200200201001000200001011000010011200001101300000101000100201001010000100000000000010001000010000001010010200000010000000000000110000100000010000000010011001200100010000000100210000101000000010010200010001000001101110110000001001201000000011201000200000001000100000010000000010000010000000000001010010011001011200100200000001011001110111010201200200000000001000101000010010200201300100300000000010100000100100101010000000100000000000000000200201100100110100000101100000200000000000010001010100000100000000000011000000100010000010100100100010001001001110000010011001000011000000001010001001300000001201110000000301300100000001110000000210011200100300101000001000000210000100000210010201100010011000000200101200110100001001000201100000000010000000010301000010101000000011000010010000000001000110011000200200001000000011010010000100000001111000210011110011010000000110000000000100000000000000000201000001000201000010001000110110000101010000200000000001010010001000100200101000201000000200000000000000201000010300001000000000101000100010001001300000100010000000010000000000200000200210001000010010010210000011000100201100011110210000200000000010000101110110001001000101100010000000011101100011101000000001000010211110000000100000210000200010200100000010010000010101001000011101000000000100000001110000000000000200011000010101211000001311001100010000001000011001100110000001201001000101001200000000000000111011001000100100000001001001300000101000000000100010000001300011210001100100100100100011000010000000000001110000100210000111101200000001000001201100100010010000000000000100101010100210100001010000000100000100000100000200011000010000010001111011001010100000000011001000001010000001000000011000000000000011011211100100001000000200000000210000000201010000001000101000200000001300200011000000010000000010000100111010000101001100110001010010011001111100011300010010010000000200001100000010000000001000000000100000300100100210110000000000310210210010000200010110100001200000000000001101011300000010011000110010200200001100010010100011000000000100011000001200010110100300101101011100001110200000110010200000010301000010001100000000000001001101101010010011000000011100001011200200000010001010000001100110000010001100000201010100000010100000010300100001111100001000000010100001000100001000000000010000101000110000310010110010000100001100310001101001001010010001000011010000211000000000010200210010201010000001010000100310001011010100110100110100000000100000200000001010000001110200000000010000001001000100010001010000000001001000010010000000200001200200000000210000201000010011010110001000001100000011100000000100000210010000000000210110200200000011010001011000001010011210110010210200001100010001111210010110101100210000001000000100000001101000010000000000200100000000000010000010011000010010100010011001010000011000100000010010200210100010001200011010100110210210300010000000300010001001000100000110000000000010101000000000000011200110001001011200000010000100000200000000000000010000000000010000110010201000000001100011100000011100210011000110011000010000000110001001010110211200010001001011200000000210000010000000201011000000101000110111110200010000001010000011000100000001000101000011010001000300001000000010111001201010210011010000000000010100001001000200000200100000011000000010101111000100210111011000201111101001000100300001000000201000000000011000110201000010110000110110110011000101001010001010001211001100001001010000000010201001110201200000100011101000001011000011000000000000001100000200011000101000101100000200000000010100001000100010000000200010001200000000100001010001200110011310011000001000000100010010100210101100000200010000000010000000011000111001100000000010200101000001001001100001200010100000200011201200100301001300000010300001311010010010000100000000000001100100000000100000000000300101000101100001210000000001000000001010010001010000210001000011000001000001001100100011301011000000000000100000011200000101110000011000010000000101001000111011210010000100000101000000111000101010201110000000110200100001010310000100000110100101011200000100010000000010001101101100100000000010010310310210100000100000000010110100201001001000101010010001011000210100000110001100000001000010000101000001310101010001010000010001000300010000000010200000001011000000100000000011000000010100100210000101000011001200000000001000000000100011301300001000000210000100000100010000000001301000201100210210010000010000001000111000010000000000001000001100000000000011011000011001000100001010111000001301010000010100201000300200000000000100201111000000100300010001010201010100000210000000000001001000000000110000001200200011201200000000010100001010000000000100010000000000200011110001000000001010000001001010000000100101010300000000101000010001301000011000000000310210010001000200010000001001000101000000000010201010000001000001000300110000001101000200000010011110010201000010101010010000101000000010000001000010010200300110010010100201010100000010000100001010001010001010000100200011000210010110111000001201000000100001010000100000001001010001000001000111000010211010011010000000010210000010000000010300010000111000011010000000200100000100000000001201110201110100000200000001000010010000000001010001010100000001110000010000011000000000000010001001000001000001001001000000101101000000000000001000100000000000000001211101000000011200000000110200000000000100000100001300011200111300010200001001010000200011210010000000001001110000001100010010200110000000001301010001300011301000011000210000000000011000110010011100000010000000001200211000110001010000011010000000000010200001200010000000000000310111000000000000010101010101100010000010011010100210101001210010000000100001100301201100011110011000001001300001001101000010000011011200010010011001101200000001100010200000101010000100000000200100000100000110000310000000001300210010100000000011000000001000110000100000000300100001101010300010000001210000200001111010101010000000010001000110201001001000001000000110200000200110000100000010200100201210010000210000000010100100000000010001100100000000000010000000010001100010001010100000001001001010110010000000000200000001000001000200000000211100000100010001300000010000000110110300010000000000100010100201000011201000000000010000100101011000211310010000000100000000000210000110010000000000011000110310210010000101101100000000000000000010000000001001000001000001000010010001000110010000100000010010000000011200011000010000000000011201010000010000001000000000200010000101000000011000100200000200000200010000000000000000100000111111000000010001010310000010000000000011010000001000200010011011100000000010000000000000100100000200211100001200000000001001210100001000010000010000300000101000000000000001200001010000000000000000100001010211001200100001000010200001000100010011001211000100000001001000000010011200000000000010101001000000100000011100111000200200100200100000000000000110000010011001011000011100001100000001000001101000000000101301011011000010000000010000111000010000000001000001001300101010000000001000010201010011000101001200001001000100010011111000100010100100310011010011000200010001301210001110000001100200010010010200101100200000010011000011000000001000001100000011100011001011000001000100100000100211000200010200000000010011100200000110001010011000011000000010010010100010100010000010101000001000000010000311000210011000000111010000000000001101000001000000000101100011111001000010011000000201000001000001101101110100100000001001000000001100001300000000010001000111200200000200011010001001000010210010010300100101200100100000000000001010100010100010010000000011000010000000000001000000100201000010210001000000011200010000100201010201210000100001010001000010301200100101000201010010000000010100211200010110001010100000101100001000200200001000010100001001200000000010001011000110101000000010210000001201210010010010200300000301000000010001300101000001000001201010000001000200100000000010200000001110101000200200000000310000000211000000000000000101000000100010100100010000211010110001000300100100010201000100010210111000000010000011200010000000000011000110000001011100100000000000211000000000110000001111000001300000000100010100300000300000000010110110000000010000010200000201201000000101011010010000210000010010000010000010000000001000100000100011201000010010000001110000001200100100001010000110001000101110100100200001000201001000001000000100010000000011211200001001201210101011001200010011000000100010010000110010000301010010010000100000000011101010000000011010000001000110000000001200000001001001000110100000010000011000000110001010011000011001011101000000000001201301000000000100000001010010000100000111210000000000100210000010001200211110010011000010000000010300211000010010000000100010010000100010111110000000000000100010000010010100101000101301201110010001001100001000000210010000000000000101010001101000000000000000000001101000001000001111100010010100000100101000101000000110000200001100000200001001100010001200100001011000210001000000000010100000000000000300000010100000010000000010001201000000101001010000000100010101000101001110100000000000001011001000010001000001000000000001110010010000110001001000100001000311000000010101110100000111000000000010000300101201010000000000000001000000010211001201001010000001000010200000110010200001001110001200000211000000100201011000210010000010000200001000010200001210100010100001000000111010110000001000100010101210001000010000100001010010111000000000100010000000011000111000011000000100200000201001001010000010001111100101000100100001000010000001010000100210001001010201010010000000001000200101001001000001000000000001001010000000001001110010001010001000001000201210010010000000211010300000200011301111000000000000100101001100000001010001200000011000000000200000010011011110000000000000210000001001100000001001000000211011000011000000201000101001000211100110010001100000000311000001000200000000001000200010000201200001000100101001111311100010010001000010200001001110010000000000210000010100000000110000000000110201010010101011000100010110101000010000010001010000010110100010010010200300010001000010000000001001001000100010111110111000010000010210000200010010010300000000000201010000010311100000000201200110000000000000200110000010001210000001201000000000011000000110100310011001000000000000010001000001000000000000000010310100000010010000001000210000001010000000000100010100100001100101010001001001011000200010100001001011100310001210101010100000010010001301001010201101100001111010100200101010000010201000100010001001000200000010011001000100000010000001000001001000010000010001100010010010000001011300000111011000110000210000010001210001010000001000011100101010111111010100010001100010100000200001010201001000200001011000000000000111000100001001001200001300310001000000001000000211311000101211000000000111000111001000000001000010001001100001200000101000011100000100100000101200000100000111000010200000000100001111010000011010010101000100000010100000100000300001000110000000100001011001000001100000010101200000010010100100001000011200100101100000010000210100310000110000010101010101100000200000101000000100001011100000201000010000000001010000210100001000000010011000010000000100010011101201000001100000001101010101111000000011000001200200000011100010010000000000300000101011000001010101100000001301000000110100000100100001100011000000001000000110000000001001001000011301010000000011101000100010001101110000000000010200010000100001200310010010110000100100000010000001010001000000201000300100000000011101010001110000011100000000210000010011001001000010000201010000010000001210000101000000000200000100010000011000101001001000000100001000001000000010000001000200000101001010100000101200000201000000000100010010010010110010210001011000200000010110001101000000101000000001000000000310011001000100000000000000010100011201200011000200100010011001200000000000100100000001100100000000000000010000200011000211010000001110010010000001011001000011000200101000000200000001000010000210200010010011211001010010101011010200001010001001000000100001101010001201200000001201010000200011001001010201000001011011000000000010010011001010010000000001300200010000000011001000001010101101010000300001000200001000001210100200001111111110000010000000101101000100000000000010300000010001100000000010010100000011000111000200010010301100000000011000200001001000010011010200000010000111000101010010000200001000311001201000101011000011000100000000000000300010000000200000101010000000001200000000000100000001000200110210100100100010100110001000100000201210200101010000000000011011010310210201200001111011001000200000000000300010000300010000000100000100000100001000200010000100201010000100011010010000110011001010000001001010000001000000010000010000010100101100100000010000011210000101000001000000000000100000000000011110211100000300210210110000011000001000000001000001000200110001100201100001100001111100001000310000000200001000100110200000000000010100000311001000301000010000010110000000110001001110010011001001001101200001001000310000000100000000001000010001100000000000000000001210310000011000011200010000001101001301200111000000000000001210000000000001000001011001300201000011100001300011010000010000101000000110111201100200200010001001000000100000010210010000000001100001011110111100210000001011201000200001001000011000000000100000000101100010000001000100301000001010310010000110101200000100300100001101000011110000200000100000010001001000010001011011111001000110000100000010100201101110000001111200000000010000011011000000010000001100001200000000001200010011211011200000000100010011210001200101000011110101000000000100001001001101111201000010100211101001000201010000000010000000001101000111001001000000010000000200100010000100000000100001001000010000010000111100001100110000010001201000200011101100201100000001000000101000000000011100100010101000200010010111000201001210010000300210100001100000100101000000000111011201000001001311010010000210001210111001111000010300011001111000000000000001000001011000101001100110000010011000000010000000000001100100000100110010000000100210010010111001001200210010100001210000001001200000010200000211011100000100300010010210200110001000200010010001110101001310300001000000110100010110000100010001000201000000001000011010200000001100000010000101300001011100010000010100010301000000000010200010100000110000100200100000010001000011110001001000201000010000000000011100310101001000001000000001000000010100110010011001200000300010110200000001200000000000000200001101310010100011010010200200100000000100001000100200010000100100000010000000210010201000010011101000100001000000201000301000000000011000200001001101101200000001000010001001210110000010000110011300110001211200010210011000001010310001110211101011001010000010010010000010000000001000010000000010100000010210010201000001100000111000001301000000201011200101000101010300110000010001200110110101000011000000000011010000200100000000100000110001001001311000011001011010010001000001010001000101011100010100010000001000000010001011000000000101110001000000000000010300200100011011010200000000201010200010010301000001300100200001300100100100100001100210100001210110001010000001201000010000110000200010001001000000011000001100000001010000100001100200011011000011110010100010101000100001000000010000000000011001000200000000110200000000000000010210010000010000111200010100300301101000000000000300000010100000200310000000001001000000100110000010000300100200001110001010000000000101101000101100000200001000000100010010000011000000001011110011011010000000110000000201100010110010200000200110000001100100101110100010011000000310000001000000011210000010000000001301010110010210010001000011001000010001001100000100100010200000101310001010210001100100010011000011000000201300011010010000001000300000100000000001010000000000000010110010000110200011000100100010000010011011001001110300001000000210000000310010000000000011200100001000200001011000000011000000000110000211001000000001000000010010100011001100010101101000000000000100001000011001210001010000100001000101000001000001011010001000011000010001000100011000000001100011000111200001001000000100010010000001000011011211000001001000100000201010100200001101000001000000110000000200001000001000200000001101001010001000010101201300200000010000000000000210000100010000000101001000000101110001110201000010000201201000000001000000101000000000001001100011000211000110001000000300200000001001011001110100100000101001001000011000010010000010001011000000201000000010201010110200300001011300111210200100110011110000001000000001000000111001001000001200100000000000010010010110200000000000001010200001000001001100010100011010010011000001011001100201000001010100101010000000010000001010000010010011010301110001010011000000001110000200000000101000000000300001010000110000001000210010101200110101110011001001110000011000000001100000110000000000010010101010101001001100000100010010310000000311000000010000010000010000100000101101010001000000000010010200000000001000000001000111000011200001210100010100111011010000000001001000000111000000001101111000000010210200010000000000000210001010100001000000001001010000011000000000100010000000001000000001000000010201201000000000001100000100300010101000010110010000000001000001000111001000210010011010110000100301010000200210101100000000001000310100100201110001011000201201000010211001101000000110100010200100000301011000100000110300000100000210000001100000000211000001200200210111001000001001010010010110100211010000010000000001000001200200310210000101110101000311100001100000010001010001000100000000000000000000001000101100000100000100100110200001000001010000001100011001011010000111101101011000201310000000001100000000001000100010200011001211000010000001000000200010000010000201000000000000010000000100201000101010011000100010000200010200100100000000000001000000001201010000100000000110001200100100011010000001010000100011011000011000100000300000200001101010200010210310000210110210000000001200000010000000000000000000000011000000000010010200110300110211100000000200010110001110010000110000001201000010001000010110000010010010101001001000010100200000000100010000310000000010010000000010000001010101210000000310001000000001000010001310000101000200200000001001001100000311001001100010000010001000010001000110200000110000001010100100000000111000200010200010010010000000000100010010000201001000101000000000001001011210101110010001001100011010000000101001000211001001000100000000200300100000000000000100010201100000001001201011001000010000011000000100000010100000201000000000000200200210011010110110001300001010100001210001001000101100001200010010001301201000000000011000011000100100000001000000001000010011110100110001100001001110010001200211011010000001000001000010001010100000001001100210100100010100000000100001000000210301000001110010000000200001001010001000000011100010011201300000200100001100000000100110000000010200001200000000200011100201000000000000011200100201011000100201000000000100000000001000010010000010201100101001200010011100000000000000001000000001010000011010110210100010200010210010000001000211100001100001010010000111100011201101001200010201200010010011101000011301011101010110000211010001000100010100000100200010011000010001000001000300301210000000010100010000000011011000000010101011301000211010000100000101000010001110000010000110101000000201000110000000001001200000000310000000100000200310000000000111100210000000111000001011000000000000001010000000000000000010010010000000000111100010101000200200010010200000001010000100001000110300000001101301100000011000001000000110011010010000010000200100000000000000011010200000010200100010000210010311010000011001000001001001210210000200210100000100000000000001000200100200000200000011300000000000001010000010010100001010010000010001000000001000100000000010000111001310010010001210000110000000000201001000001001000000000000201200001000000000000000000000011001010001000010000001111000100011100011001001000110010100010000100000211010100100000000001000000000100001101010011001000000001100001001000210001000201000300210000200000111000110001000000010010000011100001011110110001000001000100001001000000000000000000111000100101000000000000000010000210010110000001110010000200310011010110010301010010200101100000001000010210000100010000000200000010001010110001010100000001210000001100000200000000000010010100100000010001100000010201000200000010200010000101000300000101311000000000000000000001311000000100000001100000001110100001011000001000000111010000200000010010010200001010011001000001210100010000001200110000000001110001011000200011001000000011000210301011010000110000000000100300000010100000010110000200010001001000001111101001110000100110010001000011001200011000210001000100001011000110001011011010100100010010000000301011011111001000001001011000000000301011110000001001200100300011000000100000210001001001200000000001010000000210001200000000000110000010110000110000000010001200010200001000000001000011100000100010010201311000000111000100200310000000000001001000201201001200000010000000010100010210000000010010011211101000000011010011000011200010010001001000000000001000100101100100100000210000100000100000011000010001100200010011000100000100101000100001000001110200110000101110010011011000001000011000010000000010201000001000200100100010000001000010000000000100200001101300010200001010201200301000000101000211211000211000000201100000000001110000000310011101000000000011000000011101001010100000010310000001100000111001300001101011000200100111000300000000000000000211110001011000110100111010101101000000001100010001010011010010310010000010000000010010010010000001100000010010010') return;
-  const out = [];
-  for (let i = 0; i + 3 <= raw.length; i += 3) out.push(raw.substr(i, 3));
-  State.codes = out;
-  State.sessionStartN = out.length;
-  saveCodes();
-  localStorage.setItem(LS_SESSION_START, String(out.length));
-  localStorage.setItem(LS_SEEDED, '1');
-}
-
-/* ==================================================================
-   INICJALIZACJA
-   ================================================================== */
-async function init() {
-  if (navigator.storage && navigator.storage.persist) {
-    try { await navigator.storage.persist(); } catch {}
-  }
-  trySeed();
-  State.codes = loadCodes();
-  State.sessions = loadSessions();
-  const sst = localStorage.getItem(LS_SESSION_START);
-  State.sessionStartN = sst != null ? Number(sst) : State.codes.length;
-  State.tab = localStorage.getItem(LS_TAB) || 'live';
-  State.histFilter = localStorage.getItem(LS_HISTFILT) || 'all';
-  recompute();
-  bindNav();
-  render();
-}
-
-/* ==================================================================
-   AKCJE
-   ================================================================== */
+/* AKCJE */
 function addCode(code) {
   const c = toCode(code);
-  if (!c || c.length !== 3 || !/^\d{3}$/.test(c)) { toast('Nieprawidłowy kod', 'LOSS'); return; }
-
-  const prevNCycles = State.cycles.length;
-  const prevSessionPnl = State.sessionPnl;
-
+  if (!c || !/^\d{3}$/.test(c)) { toast('Zły kod', 'LOSS'); return false; }
+  const prevN = State.cycles.length;
   State.codes.push(c);
-  saveCodes();
-  recompute();
-
-  // wykryj zdarzenia
-  const nCyclesNow = State.cycles.length;
-  if (nCyclesNow > prevNCycles) {
-    // domknięto co najmniej jeden cykl — sprawdź WIN/LOSS/TRIGGER
-    for (let i = prevNCycles; i < nCyclesNow; i++) {
+  save(); recompute();
+  const nowN = State.cycles.length;
+  if (nowN > prevN) {
+    for (let i = prevN; i < nowN; i++) {
       const cyc = State.cycles[i];
-      // czy ten kod domknął cykl będący cyklem granym jakiegoś triggera?
-      const closedByCode = State.codes.length;
-      // sprawdź czy jakiś trigger miał ten cykl jako grany
       const games = playedGamesAt(i);
       for (const g of games) {
         if (g.M <= K_LIMIT) toast(`WIN T${g.TM}+${g.offset} K:${g.M} · +${PNL_WIN[g.M]} zł`, 'WIN');
         else toast(`LOSS T${g.TM}+${g.offset} M=${g.M} · −1024 zł`, 'LOSS');
       }
-      // nowy trigger?
       if (cyc.M === 1 || cyc.M === 2) {
-        const t1c = State.cycles.slice(0, i + 1).filter(c => c.M === 1).length;
-        const t2c = State.cycles.slice(0, i + 1).filter(c => c.M === 2).length;
-        const n = cyc.M === 1 ? t1c : t2c;
-        toast(`⚡ TRIGGER T${cyc.M} #${n} — otwarte offsety ${(cyc.M === 1 ? T1_OFFSETS : T2_OFFSETS).map(x => '+' + x).join(' ')}`, 'TRIG');
+        const cn = State.cycles.slice(0, i + 1).filter(x => x.M === cyc.M).length;
+        toast(`⚡ TRIGGER T${cyc.M} #${cn}`, 'TRIG');
       }
     }
     vibrate([40, 60, 40]);
-  }
+  } else vibrate([20]);
   render();
+  return true;
 }
 
-// zwraca listę {TM, trigNo, offset, M} — cykle grane których cyklem-grany jest cykl o indeksie targetTidx
 function playedGamesAt(targetTidx) {
-  const games = [];
-  const counter = { 1: 0, 2: 0 };
-  for (let tidx = 0; tidx < State.cycles.length; tidx++) {
-    const cyc = State.cycles[tidx];
-    if (cyc.M !== 1 && cyc.M !== 2) continue;
-    counter[cyc.M]++;
-    const offsets = cyc.M === 1 ? T1_OFFSETS : T2_OFFSETS;
-    for (const off of offsets) {
-      if (tidx + off === targetTidx) {
-        games.push({ TM: cyc.M, trigNo: counter[cyc.M], offset: off, M: State.cycles[targetTidx].M });
-      }
-    }
+  const g = []; const cnt = { 1: 0, 2: 0 };
+  for (let t = 0; t < State.cycles.length; t++) {
+    const c = State.cycles[t];
+    if (c.M !== 1 && c.M !== 2) continue;
+    cnt[c.M]++;
+    const offs = c.M === 1 ? T1_OFFSETS : T2_OFFSETS;
+    for (const o of offs) if (t + o === targetTidx) g.push({ TM: c.M, trigNo: cnt[c.M], offset: o, M: State.cycles[targetTidx].M });
   }
-  return games;
+  return g;
 }
 
 function undoCode() {
   if (!State.codes.length) return;
-  State.codes.pop();
-  saveCodes();
-  recompute();
-  render();
+  State.codes.pop(); save(); recompute(); render();
 }
-
 function clearAll() {
   if (!confirm('Wyczyścić WSZYSTKIE kody? (nieodwracalne)')) return;
-  State.codes = [];
-  State.sessionStartN = 0;
-  invalidateSessionCache();
-  saveCodes();
-  localStorage.setItem(LS_SESSION_START, '0');
-  recompute();
-  render();
+  State.codes = []; State.sessionStartN = 0;
+  save(); localStorage.setItem(LS_SESSION, '0');
+  recompute(); render();
 }
-
-function markSessionStart() {
+function newSession() {
   State.sessionStartN = State.codes.length;
-  localStorage.setItem(LS_SESSION_START, String(State.sessionStartN));
-  invalidateSessionCache();
-  recompute();
-  render();
-  toast('Nowa sesja rozpoczęta', 'TRIG');
+  localStorage.setItem(LS_SESSION, String(State.sessionStartN));
+  toast('Nowa sesja rozpoczęta', 'TRIG'); render();
 }
 
-/* ==================================================================
-   EXPORT / IMPORT
-   ================================================================== */
 function exportState() {
-  const state = {
+  const lse = computeLastSafeEr(State.cycles, State.codes.length);
+  const st = {
     version: VERSION, app_version: APP_VERSION,
-    n_codes: State.codes.length,
-    n_cycles: State.cycles.length,
-    cycles: State.cycles,
-    open_cycle: State.openCycle,
-    codes: State.codes,
-    sessions: State.sessions,
-    last_safe_er: computeLastSafeEr(),
-    frozen_hash: frozenHash(State.codes.slice(0, computeLastSafeEr())),
+    n_codes: State.codes.length, n_cycles: State.cycles.length,
+    cycles: State.cycles, open_cycle: State.openCycle,
+    codes: State.codes, sessions: [],
+    last_safe_er: lse,
+    frozen_hash: frozenHash(State.codes.slice(0, lse)),
     trigger_counts: {
       T1: State.cycles.filter(c => c.M === 1).length,
       T2: State.cycles.filter(c => c.M === 2).length
     }
   };
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
   const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-  a.href = url;
-  a.download = `state_mix3_v14_${State.codes.length}_${ts}.json`;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  download(`state_mix3_v14_${State.codes.length}_${ts}.json`, JSON.stringify(st, null, 2), 'application/json');
   toast('State wyeksportowany');
 }
-
 function exportCsv() {
-  const blob = new Blob([State.codes.join('\n')], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
   const ts = new Date().toISOString().slice(0, 10);
-  a.href = url;
-  a.download = `mix3_codes_${State.codes.length}_${ts}.csv`;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  download(`mix3_codes_${State.codes.length}_${ts}.csv`, State.codes.join('\n'), 'text/csv');
   toast(`CSV: ${State.codes.length} kodów`);
 }
-
-function importFileChooser() {
+function download(name, content, type) {
+  const b = new Blob([content], { type });
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a');
+  a.href = u; a.download = name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(u);
+}
+function importFile() {
   const inp = document.createElement('input');
   inp.type = 'file'; inp.accept = '.json,.csv,.txt';
   inp.onchange = e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const rd = new FileReader();
-    rd.onload = () => importText(String(rd.result), file.name);
-    rd.readAsText(file);
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => importText(String(r.result), f.name);
+    r.readAsText(f);
   };
   inp.click();
 }
-
 function importText(text, filename) {
   let codes = null;
   if (filename.endsWith('.json')) {
     try {
-      const parsed = JSON.parse(text);
-      if (parsed.codes && Array.isArray(parsed.codes)) codes = parsed.codes.map(toCode).filter(Boolean);
-      else if (Array.isArray(parsed)) codes = parsed.map(toCode).filter(Boolean);
-    } catch (e) { toast('Błąd JSON: ' + e.message, 'LOSS'); return; }
+      const p = JSON.parse(text);
+      if (p.codes && Array.isArray(p.codes)) codes = p.codes.map(toCode).filter(Boolean);
+      else if (Array.isArray(p)) codes = p.map(toCode).filter(Boolean);
+    } catch (e) { toast('Błąd JSON', 'LOSS'); return; }
   } else {
-    // CSV/txt — każda linia to kod
     codes = text.split(/[\r\n,;]+/).map(s => s.trim()).filter(Boolean).map(toCode).filter(Boolean);
   }
   if (!codes || !codes.length) { toast('Brak kodów w pliku', 'LOSS'); return; }
-  if (!confirm(`Wczytać ${codes.length} kodów? To zastąpi obecny ciąg (${State.codes.length}).`)) return;
-  State.codes = codes;
-  State.sessionStartN = codes.length;
-  invalidateSessionCache();
-  saveCodes();
-  localStorage.setItem(LS_SESSION_START, String(codes.length));
-  recompute();
-  render();
-  toast(`Wczytano ${codes.length} kodów`);
+  if (!confirm(`Wczytać ${codes.length} kodów? Zastąpi obecny ciąg (${State.codes.length}).`)) return;
+  State.codes = codes; State.sessionStartN = codes.length;
+  save(); localStorage.setItem(LS_SESSION, String(codes.length));
+  recompute(); render();
+  toast(`Wczytano ${codes.length}`);
 }
 
-function computeLastSafeEr() {
-  const maxOff = Math.max(...T1_OFFSETS, ...T2_OFFSETS);
-  let earliest = State.codes.length + 1;
-  for (let tidx = 0; tidx < State.cycles.length; tidx++) {
-    const cyc = State.cycles[tidx];
-    if (cyc.M !== 1 && cyc.M !== 2) continue;
-    const maxOffT = cyc.M === 1 ? Math.max(...T1_OFFSETS) : Math.max(...T2_OFFSETS);
-    if (tidx + maxOffT >= State.cycles.length) earliest = Math.min(earliest, cyc.win_er);
-  }
-  if (earliest > State.codes.length) {
-    const margin = 12;
-    if (State.cycles.length > margin) earliest = State.cycles[State.cycles.length - margin].win_er;
-    else earliest = 1;
-  }
-  return Math.max(1, earliest);
-}
-
-/* ==================================================================
-   UI HELPERS
-   ================================================================== */
+/* RENDER */
 function toast(msg, kind = '') {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.className = kind ? kind + ' show' : 'show';
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => el.className = kind, 3500);
-  if (kind === 'WIN' || kind === 'LOSS') vibrate(kind === 'WIN' ? [60] : [100, 40, 100]);
+  toast._t = setTimeout(() => el.className = kind, 3200);
 }
 function vibrate(pat) { try { navigator.vibrate && navigator.vibrate(pat); } catch {} }
-function fmtPnl(n) {
-  const s = (n >= 0 ? '+' : '') + n.toLocaleString('pl-PL') + ' zł';
-  const cls = n > 0 ? 'pnl-pos' : n < 0 ? 'pnl-neg' : '';
-  return `<span class="${cls}">${s}</span>`;
+
+function currentModel() { return MODELS.find(m => m.key === State.model) || MODELS[0]; }
+
+function buildErMeta() {
+  const winM = new Map(), kroki = new Set();
+  for (const c of State.cycles) { winM.set(c.win_er, c.M); for (const k of c.kroki_ers) kroki.add(k); }
+  return { winM, kroki };
 }
 
-/* ==================================================================
-   RENDER — 4 EKRANY
-   ================================================================== */
-function render() {
-  document.getElementById('k-n').textContent = State.codes.length;
-  const lastWin = State.cycles.length ? State.cycles[State.cycles.length - 1] : null;
-  document.getElementById('k-lastwin').textContent = lastWin
-    ? `Nr ${lastWin.win_er} · M=${lastWin.M} (${State.cycles.length - 1} pkt temu)`
-    : '–';
-  document.getElementById('k-pnl').innerHTML = fmtPnl(State.sessionPnl);
+function renderChips() {
+  // filtruj po aktywnej zakładce T1/T2
+  const c = document.getElementById('chips');
+  const wantTM = State.tab === 'T1' ? 1 : 2;
+  const visible = MODELS.filter(m => m.TM === wantTM);
+  c.innerHTML = visible.map(m => {
+    const s = computeOffsetStats(State.cycles, m.TM, m.off);
+    return `<button class="chip ${m.TM===2?'t2':''} ${m.key===State.model?'active':''}" data-model="${m.key}">
+      <span class="n">T${m.TM}+${m.off}</span>
+      <span class="o">n:${s.n} · ${s.n?((s.wins/s.n*100).toFixed(0)+'%'):'–'}</span>
+    </button>`;
+  }).join('');
+  c.querySelectorAll('.chip').forEach(b => {
+    b.onclick = () => { State.model = b.dataset.model; localStorage.setItem(LS_MODEL, State.model); render(); };
+  });
+  const act = c.querySelector('.chip.active');
+  if (act) act.scrollIntoView({ inline: 'center', block: 'nearest' });
 
-  document.querySelectorAll('nav.tabs button').forEach(b => {
+  // update badges w zakładkach
+  document.getElementById('badge-T1').textContent = T1_OFFSETS.length;
+  document.getElementById('badge-T2').textContent = T2_OFFSETS.length;
+  document.querySelectorAll('.tabs button').forEach(b => {
     b.classList.toggle('active', b.dataset.tab === State.tab);
   });
-  const m = document.getElementById('main');
-  if (State.tab === 'live')       m.innerHTML = renderLive();
-  else if (State.tab === 'input') m.innerHTML = renderInput();
-  else if (State.tab === 'hist')  m.innerHTML = renderHist();
-  else if (State.tab === 'stats') m.innerHTML = renderStats();
-  bindTab();
 }
 
-function renderLive() {
+function renderTiles() {
+  const m = currentModel();
   const oc = State.openCycle;
-  const active = activeTriggersLive(State.cycles, State.codes, oc);
-  const lastCode = State.codes.length ? State.codes[State.codes.length - 1] : null;
-  const lastRole = lastCode ? roleOf(lastCode) : null;
+  let baseTxt;
+  if (!oc) baseTxt = 'szukam anchor';
+  else {
+    const nk = oc.kroki_ers.length;
+    const po = State.codes.length - oc.anchor_er;
+    baseTxt = `Nr ${oc.anchor_er} · K=${nk} · +${po}k`;
+  }
+  document.getElementById('tile-base').textContent = baseTxt;
 
-  // Ostatnie 5 grań (zamknięte cykle grane)
-  const recent = [];
-  const counter = { 1: 0, 2: 0 };
-  for (let tidx = 0; tidx < State.cycles.length; tidx++) {
-    const cyc = State.cycles[tidx];
-    if (cyc.M !== 1 && cyc.M !== 2) continue;
-    counter[cyc.M]++;
-    const offsets = cyc.M === 1 ? T1_OFFSETS : T2_OFFSETS;
-    for (const off of offsets) {
-      const gi = tidx + off;
-      if (gi >= State.cycles.length) continue;
-      const M = State.cycles[gi].M;
-      recent.push({
-        trigNo: counter[cyc.M], TM: cyc.M, offset: off, resultM: M,
-        pnl: M <= K_LIMIT ? PNL_WIN[M] : PNL_LOSS,
-        win_er: State.cycles[gi].win_er
-      });
+  const trigWrap = document.getElementById('tile-trig-wrap');
+  const trigEl = document.getElementById('tile-trig');
+  const trigLbl = document.getElementById('tile-trig-lbl');
+  const openIdx = State.cycles.length;
+  let activeTrig = null;
+  if (oc) {
+    let cnt = 0;
+    for (let t = 0; t < State.cycles.length; t++) {
+      const cyc = State.cycles[t];
+      if (cyc.M !== m.TM) continue;
+      cnt++;
+      if (t + m.off === openIdx) {
+        let ak = 1;
+        for (let i = oc.anchor_er; i < State.codes.length; i++) if (isHit(State.codes[i])) ak++;
+        activeTrig = { trigNo: cnt, phase: 'GRA', ak, stake: ak <= 8 ? K_STAKES[ak-1] : null };
+      } else {
+        for (let J = 1; J < m.off; J++) {
+          if (t + J === openIdx) {
+            let ak = 1;
+            for (let i = oc.anchor_er; i < State.codes.length; i++) if (isHit(State.codes[i])) ak++;
+            activeTrig = { trigNo: cnt, phase: `PREP J=${J}`, ak, stake: null };
+          }
+        }
+      }
     }
   }
-  const last5 = recent.slice(-5).reverse();
-
-  let activeHtml;
-  if (!active.length) {
-    activeHtml = `<div class="empty-state">Brak aktywnych triggerów w otwartym cyklu.<br>Zamknij cykl kolejnym HITem (para bezpośrednia).</div>`;
+  trigLbl.textContent = `Trigger · ${m.key}`;
+  if (activeTrig) {
+    trigWrap.classList.add('active');
+    trigEl.textContent = activeTrig.phase === 'GRA'
+      ? `#${activeTrig.trigNo} · GRA ${activeTrig.ak}/8` + (activeTrig.stake ? ` · ${activeTrig.stake}zł` : '')
+      : `#${activeTrig.trigNo} · ${activeTrig.phase} k${activeTrig.ak}`;
   } else {
-    activeHtml = `<div class="trigger-list">` + active.map(a => {
-      const isGame = a.phase === 'GRA';
-      const cls = isGame ? 'game' : 'prep';
-      const pct = isGame ? Math.min(100, (a.activeK / 8) * 100) : 0;
-      const stakeHtml = isGame && a.stake
-        ? `<div class="stake">Postaw <span class="amt">${a.stake} zł</span> na K${a.activeK}${a.nextStep ? ` · po BUST: ${K_STAKES[a.nextStep-1]} zł na K${a.nextStep}` : ''}</div>`
-        : `<div class="stake" style="color:var(--text-mute)">Czekaj na domknięcie prep cyklu</div>`;
-      return `<div class="trig ${cls}">
-        <div class="hdr">
-          <span class="tag">T${a.TM} #${a.trigNo} · offset +${a.offset}</span>
-          <span class="live">⏳ LIVE</span>
-        </div>
-        <div class="phase">${a.phase === 'GRA' ? `GRA — Krok Gry ${a.activeK}/8` : `prep cykl ${a.phase} (k${a.activeK})`}</div>
-        ${isGame ? `<div class="progress"><div class="bar" style="width:${pct}%"></div></div>` : ''}
-        ${stakeHtml}
-      </div>`;
-    }).join('') + `</div>`;
+    trigWrap.classList.remove('active');
+    trigEl.textContent = 'brak aktywnego';
   }
 
-  return `
-    <div class="card">
-      <h3>Otwarty cykl</h3>
-      ${oc ? `
-        <div class="open-cycle">
-          <div class="stat"><div class="num">${oc.anchor_er}</div><div class="lbl">Anchor Nr</div></div>
-          <div class="stat"><div class="num">${oc.kroki_ers.length}</div><div class="lbl">Kroki</div></div>
-          <div class="stat"><div class="num">${State.codes.length - oc.anchor_er}</div><div class="lbl">Kodów po</div></div>
-        </div>
-        ${lastRole ? `<div class="last-event ${lastRole}">${lastCode} — ${lastRole}</div>` : ''}
-      ` : `<div class="empty-state">Brak otwartego cyklu. Pierwszy HIT otworzy cykl.</div>`}
-    </div>
+  const st = computeOffsetStats(State.cycles, m.TM, m.off);
+  document.getElementById('tile-stats-lbl').textContent = `Wyniki · ${m.key}`;
+  const wr = st.n ? (st.wins / st.n * 100).toFixed(1) : '0.0';
+  const ps = st.pnl >= 0 ? '+' : '';
+  document.getElementById('tile-stats').textContent = `${st.n} · ${wr}% · ${ps}${st.pnl}zł`;
 
-    <div class="section-title">Aktywne triggery (${active.length})</div>
-    ${activeHtml}
-
-    <div class="section-title">Ostatnie 5 grań</div>
-    <div class="card">
-      ${last5.length ? `<div class="recent">` + last5.map(r =>
-        `<div class="r ${r.pnl > 0 ? 'win' : 'loss'}">
-          <span>T${r.TM}#${r.trigNo} +${r.offset} · Nr ${r.win_er}</span>
-          <span>${r.pnl > 0 ? 'WIN K:' + r.resultM : 'LOSS K:8'} · ${r.pnl > 0 ? '+' : ''}${r.pnl}</span>
-        </div>`
-      ).join('') + `</div>` : `<div class="empty-state">Brak zagranych cykli.</div>`}
-    </div>
-  `;
+  document.getElementById('th-col').textContent = m.key;
+  document.getElementById('n-codes').textContent = State.codes.length;
+  document.getElementById('n-cycles').textContent = State.cycles.length;
+  const total = MODELS.reduce((a, mm) => a + computeOffsetStats(State.cycles, mm.TM, mm.off).pnl, 0);
+  const p = document.getElementById('pnl');
+  p.textContent = (total >= 0 ? '+' : '') + total + 'zł';
+  p.style.color = total > 0 ? 'var(--green)' : total < 0 ? 'var(--red)' : '';
 }
 
-function renderInput() {
-  const p = State.pendingCode;
-  const disp = p.length ? p.padEnd(3, '_') : '___';
-  const dispHtml = p.length === 3
-    ? `<span>${p}</span>`
-    : `<span class="placeholder">${disp}</span>`;
-  const readyRole = p.length === 3 ? roleOf(p) : null;
-  const roleHtml = readyRole ? `<div class="role-feedback ${readyRole}">→ ${readyRole}</div>` : `<div class="role-feedback"></div>`;
+function renderTable() {
+  const m = currentModel();
+  const labels = buildColumnLabels(m.TM, m.off, State.cycles, State.codes, State.openCycle);
+  const { winM, kroki } = buildErMeta();
+  const N = State.codes.length;
+  const rows = document.getElementById('rows');
 
-  // ostatnie 10 kodów
-  const last10 = State.codes.slice(-10);
-  const tape = last10.map(c => `<span class="c ${roleOf(c)}">${c}</span>`).join('');
+  if (!N) {
+    rows.innerHTML = `<tr><td colspan="5"><div class="empty">Brak kodów. Wpisz pierwszy poniżej.</div></td></tr>`;
+    return;
+  }
 
-  return `
-    <div class="code-display">${dispHtml}</div>
-    ${roleHtml}
-    <div class="numpad">
-      ${[1,2,3,4,5,6,7,8,9].map(n => `<button data-digit="${n}">${n}</button>`).join('')}
-      <button class="act undo" data-act="undo">Cofnij</button>
-      <button data-digit="0">0</button>
-      <button class="act" data-act="enter">Wpisz</button>
-    </div>
-    <div class="section-title">Ostatnie kody (${State.codes.length} razem)</div>
-    <div class="history-tape">${tape || '<span style="color:var(--text-mute)">brak</span>'}</div>
+  const from = Math.max(0, N - State.showLast);
+  const prio = { loss_result: 1, win_result: 2, start_gry: 3, game_hit: 4, game_step: 4,
+    trigger: 5, offset_close: 6, offset_hit: 7, offset_step: 8 };
 
-    <div class="section-title">Sesja i dane</div>
-    <div class="io-row">
-      <button class="btn" data-act="session">▶ Rozpocznij nową sesję<small>Zeruje licznik "Sesja PnL" od tego momentu (${State.sessionStartN} kodów w tle)</small></button>
-      <button class="btn" data-act="export-json">↓ Eksport state JSON<small>Kompatybilny z pipeline (state_mix3_v14.json)</small></button>
-      <button class="btn" data-act="export-csv">↓ Eksport kodów CSV<small>Do wklejenia do Test60.xlsx (kolumna A od wiersza 1)</small></button>
-      <button class="btn" data-act="import">↑ Import (JSON / CSV / TXT)<small>Zastąpi cały aktualny ciąg</small></button>
-      <button class="btn danger" data-act="clear">✕ Wyczyść wszystkie kody<small>Nieodwracalne</small></button>
-    </div>
-  `;
-}
+  const parts = [];
+  if (from > 0) {
+    parts.push(`<tr><td colspan="5"><button class="load-more" id="load-more">▲ Pokaż wcześniejsze +1000 (pozostało ${from})</button></td></tr>`);
+  }
+  for (let i = from; i < N; i++) {
+    const er = i + 1, code = State.codes[i];
+    const roleBase = isHit(code) ? 'HIT' : isStep(code) ? 'STEP' : 'SKIP';
+    const isWin = winM.has(er);
+    const isKrok = kroki.has(er);
+    const M = winM.get(er);
 
-function renderHist() {
-  const filt = State.histFilter;
-  let cycs = State.cycles.map((c, i) => ({ ...c, idx: i + 1 }));
-  if (filt === 'M1') cycs = cycs.filter(c => c.M === 1);
-  else if (filt === 'M2') cycs = cycs.filter(c => c.M === 2);
-  else if (filt === 'trig') cycs = cycs.filter(c => c.M === 1 || c.M === 2);
-  const shown = cycs.slice(-100).reverse();  // ostatnie 100
-
-  return `
-    <div class="filter-bar">
-      <button data-filt="all" class="${filt==='all'?'active':''}">Wszystkie (${State.cycles.length})</button>
-      <button data-filt="trig" class="${filt==='trig'?'active':''}">Triggery (${State.cycles.filter(c => c.M<=2).length})</button>
-      <button data-filt="M1" class="${filt==='M1'?'active':''}">M=1 (${State.cycles.filter(c=>c.M===1).length})</button>
-      <button data-filt="M2" class="${filt==='M2'?'active':''}">M=2 (${State.cycles.filter(c=>c.M===2).length})</button>
-    </div>
-    <div class="section-title">Cykle (najnowsze pierwsze, max 100)</div>
-    ${shown.length ? `<div class="cycle-list">` + shown.map(c =>
-      `<div class="cycle-row M${c.M<=2?c.M:'x'}">
-        <span class="idx">#${c.idx}</span>
-        <span class="er">Nr ${c.anchor_er}</span>
-        <span class="arrow">→ ${c.win_er}</span>
-        <span class="m">M${c.M}</span>
-      </div>`
-    ).join('') + `</div>` : `<div class="empty-state">Brak cykli spełniających filtr.</div>`}
-  `;
-}
-
-function renderStats() {
-  const perOff = [];
-  let grand = 0;
-  for (const [TM, offs] of [[1, T1_OFFSETS], [2, T2_OFFSETS]]) {
-    for (const off of offs) {
-      const s = computeOffsetStats(State.cycles, TM, off);
-      grand += s.pnl;
-      perOff.push({ TM, off, ...s, wr: s.n ? (s.wins/s.n*100) : 0 });
+    let roleTxt, extraCls = '';
+    if (isHit(code)) {
+      if (isWin && isKrok) { roleTxt = '✓ WIN+krok'; extraCls = 'win'; }
+      else if (isWin) { roleTxt = '✓ WIN'; extraCls = 'win'; }
+      else if (isKrok) { roleTxt = 'krok'; extraCls = 'krok'; }
+      else { roleTxt = 'HIT'; }
+    } else if (isStep(code)) {
+      roleTxt = 'STEP'; extraCls = 'step-role';
+    } else {
+      roleTxt = 'SKIP';
     }
+
+    const items = labels.get(er) || [];
+    if (State.onlyEvents && roleBase === 'SKIP' && !items.length) continue;
+
+    let cellCls = '', cellTxt = '';
+    if (items.length) {
+      const top = items.reduce((a, x) => prio[x.kind] < prio[a.kind] ? x : a);
+      cellCls = top.kind;
+      cellTxt = items.map(x => x.label).join('\n');
+    }
+
+    parts.push(`<tr class="${roleBase} ${extraCls}">
+      <td>${er}</td>
+      <td>${code}</td>
+      <td>${roleTxt}</td>
+      <td>${M != null ? M : ''}</td>
+      <td class="${items.length ? 'cell-label ' + cellCls : ''}">${cellTxt}</td>
+    </tr>`);
   }
-  // rozkład M
-  const mDist = {};
-  for (let m = 1; m <= 12; m++) mDist[m] = 0;
-  State.cycles.forEach(c => { if (c.M <= 12) mDist[c.M]++; });
-  const maxM = Math.max(1, ...Object.values(mDist));
-  const YEARS = 6;
 
-  return `
-    <div class="card">
-      <h3>Portfolio (T1+T2)</h3>
-      <div class="big">${fmtPnl(grand)}</div>
-      <div style="color:var(--text-dim);font-size:12px;margin-top:4px">
-        ~ ${fmtPnl(Math.round(grand/YEARS))} / rok · ${State.cycles.length} cykli · ${State.codes.length} kodów
-      </div>
-    </div>
-
-    <div class="section-title">Per (Trigger, Offset)</div>
-    <div class="card" style="padding:8px 10px">
-      <table class="stats">
-        <thead><tr>
-          <th>Trig · Off</th><th>n</th><th>WIN</th><th>LOSS</th><th>WR%</th><th>PnL</th><th>zł/rok</th>
-        </tr></thead>
-        <tbody>
-          ${perOff.map(r =>
-            `<tr>
-              <td>T${r.TM} +${r.off}</td>
-              <td>${r.n}</td>
-              <td>${r.wins}</td>
-              <td>${r.losses}</td>
-              <td>${r.wr.toFixed(1)}%</td>
-              <td>${(r.pnl>=0?'+':'')}${r.pnl}</td>
-              <td>${(r.pnl>=0?'+':'')}${Math.round(r.pnl/YEARS)}</td>
-            </tr>`
-          ).join('')}
-          <tr class="total">
-            <td>ŁĄCZNIE</td><td colspan="4"></td>
-            <td>${(grand>=0?'+':'')}${grand}</td>
-            <td>${(grand>=0?'+':'')}${Math.round(grand/YEARS)}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="section-title">Rozkład M (1..12)</div>
-    <div class="card">
-      <div class="m-chart-wrap">
-        <div class="m-chart">
-          ${[1,2,3,4,5,6,7,8,9,10,11,12].map(m => `
-            <div class="b" style="height:${(mDist[m]/maxM*100).toFixed(1)}%">
-              ${mDist[m] > 0 ? `<span class="val">${mDist[m]}</span>` : ''}
-              <span class="lbl">M${m}</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    </div>
-  `;
+  rows.innerHTML = parts.join('');
+  const lm = document.getElementById('load-more');
+  if (lm) lm.onclick = () => {
+    State.showLast += 1000;
+    State._loadedMore = true;
+    render();
+  };
+  // scroll na dół tylko przy pierwszym renderze / dodaniu kodu, nie przy load-more
+  if (!State._loadedMore) {
+    const w = document.getElementById('tbl-wrap');
+    w.scrollTop = w.scrollHeight;
+  }
+  State._loadedMore = false;
 }
 
-/* ==================================================================
-   BINDING
-   ================================================================== */
-function bindNav() {
-  document.querySelectorAll('nav.tabs button').forEach(b => {
+function render() {
+  renderChips(); renderTiles(); renderTable();
+  document.getElementById('filt').classList.toggle('on', State.onlyEvents);
+}
+
+/* BINDING */
+function bindInput() {
+  const inp = document.getElementById('code');
+  const btnAdd = document.getElementById('add');
+  const btnUndo = document.getElementById('undo');
+
+  const commit = () => {
+    let v = inp.value.trim();
+    if (!v) return;
+    if (!/^\d{1,3}$/.test(v)) { toast('Cyfry 0-9', 'LOSS'); return; }
+    v = v.padStart(3, '0');
+    if (addCode(v)) inp.value = '';
+  };
+  btnAdd.onclick = commit;
+  btnUndo.onclick = undoCode;
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); commit(); }
+  });
+  inp.addEventListener('input', () => {
+    inp.value = inp.value.replace(/\D/g, '').slice(0, 3);
+    if (inp.value.length === 3) commit();
+  });
+
+  document.getElementById('filt').onclick = () => {
+    State.onlyEvents = !State.onlyEvents;
+    localStorage.setItem(LS_FILT, State.onlyEvents ? '1' : '');
+    render();
+  };
+}
+
+function bindTabs() {
+  document.querySelectorAll('.tabs button').forEach(b => {
     b.onclick = () => {
       State.tab = b.dataset.tab;
       localStorage.setItem(LS_TAB, State.tab);
-      State.pendingCode = '';
+      // jeśli aktywny model nie należy do wybranej zakładki — pierwszy z zakładki
+      const wantTM = State.tab === 'T1' ? 1 : 2;
+      if (!State.model.startsWith(State.tab)) {
+        State.model = State.tab === 'T1' ? 'T1+1' : 'T2+2';
+        localStorage.setItem(LS_MODEL, State.model);
+      }
       render();
     };
   });
 }
 
-function bindTab() {
-  if (State.tab === 'input') {
-    document.querySelectorAll('.numpad button[data-digit]').forEach(b => {
-      b.onclick = () => {
-        if (State.pendingCode.length < 3) {
-          State.pendingCode += b.dataset.digit;
-          if (State.pendingCode.length === 3) {
-            // auto-render z feedbackiem, Wpisz zatwierdza
-            render();
-          } else render();
-        }
-      };
-    });
-    document.querySelector('[data-act="enter"]').onclick = () => {
-      if (State.pendingCode.length === 3) {
-        addCode(State.pendingCode);
-        State.pendingCode = '';
-        // render już się wykonał w addCode
-      } else if (State.pendingCode.length > 0) {
-        // uzupełnij zerami z przodu
-        addCode(State.pendingCode.padStart(3, '0'));
-        State.pendingCode = '';
-      } else {
-        toast('Wpisz najpierw cyfry', 'LOSS');
-      }
-    };
-    document.querySelector('[data-act="undo"]').onclick = () => {
-      if (State.pendingCode.length) {
-        State.pendingCode = State.pendingCode.slice(0, -1);
-        render();
-      } else {
-        undoCode();
-      }
-    };
-    document.querySelector('[data-act="session"]').onclick = markSessionStart;
-    document.querySelector('[data-act="export-json"]').onclick = exportState;
-    document.querySelector('[data-act="export-csv"]').onclick = exportCsv;
-    document.querySelector('[data-act="import"]').onclick = importFileChooser;
-    document.querySelector('[data-act="clear"]').onclick = clearAll;
-  }
-  if (State.tab === 'hist') {
-    document.querySelectorAll('.filter-bar button').forEach(b => {
-      b.onclick = () => {
-        State.histFilter = b.dataset.filt;
-        localStorage.setItem(LS_HISTFILT, State.histFilter);
-        render();
-      };
-    });
-  }
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const lbl = document.getElementById('theme-lbl');
+  if (lbl) lbl.textContent = theme === 'dark' ? '☀ Jasny motyw' : '☾ Ciemny motyw';
+  // meta theme-color dla status baru Androida
+  const meta = document.querySelector('meta[name="theme-color"]:not([media])');
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#0e0b14' : '#f4f3f7');
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  localStorage.setItem(LS_THEME, next);
+  applyTheme(next);
 }
 
-// klawiatura desktop
-document.addEventListener('keydown', e => {
-  if (State.tab !== 'input') return;
-  if (e.key >= '0' && e.key <= '9') {
-    if (State.pendingCode.length < 3) { State.pendingCode += e.key; render(); }
-  } else if (e.key === 'Enter') {
-    if (State.pendingCode.length === 3) { addCode(State.pendingCode); State.pendingCode = ''; }
-    else if (State.pendingCode.length > 0) { addCode(State.pendingCode.padStart(3,'0')); State.pendingCode = ''; }
-  } else if (e.key === 'Backspace') {
-    if (State.pendingCode.length) { State.pendingCode = State.pendingCode.slice(0,-1); render(); }
-    else undoCode();
-  }
-});
+function bindMenu() {
+  const btn = document.getElementById('btn-menu');
+  const panel = document.getElementById('menu-panel');
+  btn.onclick = e => { e.stopPropagation(); panel.classList.toggle('open'); };
+  document.addEventListener('click', e => {
+    if (!panel.contains(e.target) && e.target !== btn) panel.classList.remove('open');
+  });
+  panel.querySelectorAll('button[data-act]').forEach(b => {
+    b.onclick = () => {
+      panel.classList.remove('open');
+      const a = b.dataset.act;
+      if (a === 'theme') toggleTheme();
+      else if (a === 'session') newSession();
+      else if (a === 'export-json') exportState();
+      else if (a === 'export-csv') exportCsv();
+      else if (a === 'import') importFile();
+      else if (a === 'clear') clearAll();
+    };
+  });
+}
 
+async function init() {
+  if (navigator.storage && navigator.storage.persist) { try { await navigator.storage.persist(); } catch {} }
+  // motyw: domyślnie jasny, chyba że user wybrał ciemny
+  applyTheme(localStorage.getItem(LS_THEME) === 'dark' ? 'dark' : 'light');
+  // Kolejność: NAJPIERW load z localStorage, potem seed jako fallback jeśli pusto.
+  // Poprzednia wersja miała odwrotną kolejność + zbugowany warunek — stąd pusta tabela.
+  State.codes = load();
+  trySeed();
+  const sst = localStorage.getItem(LS_SESSION);
+  State.sessionStartN = sst != null ? Number(sst) : State.codes.length;
+  State.model = localStorage.getItem(LS_MODEL) || 'T1+1';
+  State.tab = localStorage.getItem(LS_TAB) || 'T1';
+  State.onlyEvents = !!localStorage.getItem(LS_FILT);
+  // sanity: model musi pasować do zakładki
+  if (!State.model.startsWith(State.tab)) State.model = State.tab === 'T1' ? 'T1+1' : 'T2+2';
+  recompute(); bindTabs(); bindInput(); bindMenu(); render();
+}
 init();
 </script>
 </body>

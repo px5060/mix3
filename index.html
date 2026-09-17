@@ -425,7 +425,8 @@ function save(){ localStorage.setItem(LS_CODES, encode(State.codes)); }
 function load(){ const r = localStorage.getItem(LS_CODES); return r ? decode(r) : []; }
 
 function trySeed() {
-  if (localStorage.getItem(LS_SEEDED)) return;
+  // Wczytuje seed gdy State.codes jest puste — niezależnie od flagi LS_SEEDED.
+  if (State.codes.length > 0) return;
   const raw = document.getElementById('seed').textContent.trim();
   if (!raw || raw.length < 300 || raw.length % 3 !== 0) return;
   State.codes = decode(raw);
@@ -433,6 +434,22 @@ function trySeed() {
   save();
   localStorage.setItem(LS_SESSION, String(State.sessionStartN));
   localStorage.setItem(LS_SEEDED, '1');
+}
+
+function autoMigrateSeed() {
+  // Gdy zainstalowano nowszy index.html z rozszerzonym seedem — auto-dopisz brakujące
+  // kody pod warunkiem że dotychczasowy ciąg jest ścisłym prefiksem nowego.
+  const raw = document.getElementById('seed').textContent.trim();
+  if (!raw || raw.length < 300 || raw.length % 3 !== 0) return 0;
+  const seedCodes = decode(raw);
+  if (seedCodes.length <= State.codes.length) return 0;
+  for (let i = 0; i < State.codes.length; i++) {
+    if (State.codes[i] !== seedCodes[i]) return 0; // rozjazd — nie tykamy
+  }
+  const added = seedCodes.length - State.codes.length;
+  State.codes = seedCodes;
+  save();
+  return added;
 }
 
 function recompute() {
@@ -832,6 +849,7 @@ async function init() {
   // Poprzednia wersja miała odwrotną kolejność + zbugowany warunek — stąd pusta tabela.
   State.codes = load();
   trySeed();
+  const migrated = autoMigrateSeed();
   const sst = localStorage.getItem(LS_SESSION);
   State.sessionStartN = sst != null ? Number(sst) : State.codes.length;
   State.model = localStorage.getItem(LS_MODEL) || 'T1+1';
@@ -840,6 +858,7 @@ async function init() {
   // sanity: model musi pasować do zakładki
   if (!State.model.startsWith(State.tab)) State.model = State.tab === 'T1' ? 'T1+1' : 'T2+2';
   recompute(); bindTabs(); bindInput(); bindMenu(); render();
+  if (migrated > 0) setTimeout(() => toast(`Auto-migracja: +${migrated} kodów z seed`, 'TRIG'), 400);
 }
 init();
 </script>
